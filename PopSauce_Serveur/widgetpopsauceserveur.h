@@ -6,6 +6,12 @@
 #include <QTcpSocket>
 #include <QBuffer>
 #include <QPixmap>
+#include <QSqlDatabase>
+#include <QMessageBox>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QSettings>
+#include <QFileInfo>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class WidgetPopSauceServeur; }
