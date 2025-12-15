@@ -1,14 +1,20 @@
 Format des trames
 
 serveur out :
-Envoie des question
+Envoie des question : 
 out << taille << commande << img << question << score << timer;
-        quint16    QChar     png?    QString    int      double
+      quint16    QChar     QPixmap   QString    int      double
+                'Q'        C:\        "qui ?"   1        1.1
 
+Verifie si la reponse est vrai ou faux
+out << taille << commande 
+      quint16    QChar       
+                'V' 'F'
 
-out << taille << commande << vrai/faux
-      quint16    QChar        bool
-
+si temps = 0 ou si tous le monde a trouvé les reponse 
+out << taille << commande << reponse
+                QChar        QString
+                'T' 'W'        "moi"
 
 client out :
 out << taille << reponse;
