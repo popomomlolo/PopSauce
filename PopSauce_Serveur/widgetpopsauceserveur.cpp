@@ -7,8 +7,11 @@ WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
 {
     ui->setupUi(this);
 
+    QPixmap img("/home/USERS/ELEVES/CIEL2024/alaffiac/CIEL_2/challenge_noel/images_jpeg/xavier_sous_frozen.jpeg");
+    ui->labelImage->setPixmap(img);
+
     QString ip,login,mdp,base;
-    QString conf="../../conf.ini";
+    QString conf="conf.ini";
 
     QFileInfo testFichier(conf);
 
@@ -19,7 +22,7 @@ WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
         ip=paramsSocket.value("configBDD/ip","178.58.18.8").toString();
         login=paramsSocket.value("configBDD/login","ciel").toString();
         mdp=paramsSocket.value("configBDD/mdp","ciel").toString();
-        base=paramsSocket.value("configBDD/base","popSauce").toString();
+        base=paramsSocket.value("configBDD/base","popSauc").toString();
 
         qDebug()<<ip<<login<<mdp<<base;
     }
@@ -27,6 +30,7 @@ WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
     {
         qDebug()<<"fichier ini non valide";
     }
+    qDebug()<<ip<<login<<mdp<<base;
 
     QSqlDatabase bdd;
     bdd = QSqlDatabase::addDatabase("QMYSQL");
@@ -70,6 +74,7 @@ void WidgetPopSauceServeur::onQTcpServer_newConnection()
             this, &WidgetPopSauceServeur::onQTcpSocket_disconnected);
     listeDesClients.append(client);
     qDebug() << "Nouvelle connexion de" << client->peerAddress().toString();
+    envoyerQuestion(client);
 
 }
 
@@ -98,25 +103,37 @@ void WidgetPopSauceServeur::onQTcpSocket_readyRead()
         {
             QChar commande;
             in>>commande;
-            QPixmap image;
-            in>>image;
-            switch(commande.toLatin1()){
-            case 'P':
-                envoyerMessage(client,image);
-                break;
-            default:
-                break;
-            }
+            QPixmap reponse;
+            in>>reponse;
+            //envoyerQuestion(client);
         }
     }
 }
 
-void WidgetPopSauceServeur::envoyerMessage(QTcpSocket *emetteur, QPixmap image)
+void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
 {
-    foreach (QTcpSocket *client, listeDesClients) {
-        if (client != emetteur) {
-            envoyerPosition(client, image);
-        }
-    }
+    quint64 taille = 0;
+    QBuffer tampon;
+    QChar commande('Q');
+    QPixmap img("/home/USERS/ELEVES/CIEL2024/alaffiac/CIEL_2/challenge_noel/images_jpeg/xavier_sous_frozen.jpeg");
+    ui->labelImage->setPixmap(img);
+    QString question("Qui est cet homme ?");
+    int score(0);
+    int tempsMilisecondes=0;
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+
+    // Construction de la trame
+    out << taille << commande << img << question << score << tempsMilisecondes;
+
+    // Calcul et mise à jour de la taille
+    taille = static_cast<quint64>(tampon.size()) - sizeof(taille);
+    tampon.seek(0);
+    out << taille;
+ qDebug() << taille << commande << img << question << score << tempsMilisecondes;
+    // Envoi
+    client->write(tampon.buffer());
 }
+
+
 
