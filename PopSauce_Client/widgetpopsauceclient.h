@@ -15,7 +15,7 @@ class WidgetPopSauceClient : public QWidget
 public:
     WidgetPopSauceClient(QWidget *parent = nullptr);
     ~WidgetPopSauceClient();
-
+    void envoyerDonnees(QString reponse);
 private slots:
     void on_pushButtonConnexion_clicked();
     void onQTcpSocket_connected();
@@ -27,6 +27,7 @@ private slots:
 private:
     Ui::WidgetPopSauceClient *ui;
     QTcpSocket socketJoueur;
-
+    bool enCoursDeLecture=false;
+    quint64 tailleAttendue=0;
 };
 #endif // WIDGETPOPSAUCECLIENT_H
