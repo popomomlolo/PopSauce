@@ -85,5 +85,8 @@ void WidgetPopSauceClient::on_pushButtonEnvoyer_clicked()
                     )
                 );
     ui->labelImage->setAlignment(Qt::AlignCenter);
+
+    ui->labelQuestion->setText("Qui est-ce ?");
+    ui->labelQuestion->setAlignment(Qt::AlignCenter);
 }
 
