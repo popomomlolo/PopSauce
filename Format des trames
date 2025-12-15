@@ -1,0 +1,10 @@
+Format des trames
+
+serveur out :
+debut
+out << taille << commande << img << question << score << timer;
+
+
+
+client out :
+out << taille << reponse;
