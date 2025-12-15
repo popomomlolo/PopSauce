@@ -14,10 +14,11 @@ SELECT reponse FROM "question" WHERE id_quest = :id;
 
 ====================================================================================================================
 
-        Fonction pour recuperer une Question et son indice avec le meme ID
+  Fonction pour recuperer une Question et son indice avec le meme ID
 
-void WidgetPopSauceServeur::recupererQuestionIndice()
-{
+
+    void WidgetPopSauceServeur::recupererQuestionIndice()
+    {
     QSqlQuery requetePrepare;
     requetePrepare.prepare("SELECT question, indice FROM "question" WHERE id_quest = :id;");
 
@@ -33,4 +34,4 @@ void WidgetPopSauceServeur::recupererQuestionIndice()
         indice=requetePrepare.value("indice").toString();
         qDebug()<<question << indice;
     }
-}
+    }
