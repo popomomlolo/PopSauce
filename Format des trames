@@ -1,7 +1,7 @@
 Format des trames
 
 serveur out :
-debut
+Envoie des question
 out << taille << commande << img << question << score << timer;
 
 
