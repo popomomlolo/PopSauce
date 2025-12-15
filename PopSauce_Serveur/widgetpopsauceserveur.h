@@ -5,6 +5,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QBuffer>
+#include <QPixmap>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class WidgetPopSauceServeur; }
