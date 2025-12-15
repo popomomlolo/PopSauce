@@ -6,6 +6,46 @@ WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
     , ui(new Ui::WidgetPopSauceServeur)
 {
     ui->setupUi(this);
+
+    QString ip,login,mdp,base;
+    QString conf="../../conf.ini";
+
+    QFileInfo testFichier(conf);
+
+    if (testFichier.exists() && testFichier.isFile())
+    {
+        QSettings paramsSocket(conf,QSettings::IniFormat);
+
+        ip=paramsSocket.value("configBDD/ip","178.58.18.8").toString();
+        login=paramsSocket.value("configBDD/login","ciel").toString();
+        mdp=paramsSocket.value("configBDD/mdp","ciel").toString();
+        base=paramsSocket.value("configBDD/base","popSauce").toString();
+
+        qDebug()<<ip<<login<<mdp<<base;
+    }
+    else
+    {
+        qDebug()<<"fichier ini non valide";
+    }
+
+    QSqlDatabase bdd;
+    bdd = QSqlDatabase::addDatabase("QMYSQL");
+
+    bdd.setHostName(ip);
+    bdd.setDatabaseName(base);
+    bdd.setUserName(login);
+    bdd.setPassword(mdp);
+
+    bool ok = bdd.open();
+    if (!ok)
+    {
+        QMessageBox::warning(this,"Erreur de connexion à la bdd ",bdd.lastError().text());
+    }
+    else
+    {
+        qDebug()<<"Ouverture de la BDD ok";
+    }
+    
     connect(&sockEcoute, &QTcpServer::newConnection,
             this, &WidgetPopSauceServeur::onQTcpServer_newConnection);
 }
