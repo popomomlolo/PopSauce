@@ -42,6 +42,41 @@ void WidgetPopSauceServeur::onQTcpSocket_disconnected()
 
 void WidgetPopSauceServeur::onQTcpSocket_readyRead()
 {
+    QTcpSocket *client=qobject_cast<QTcpSocket *>(sender());
+    QDataStream in(client);
+    quint16 taille=0;
 
+    if (client->bytesAvailable() >= (qint64)sizeof(taille))
+    {
+        // Création du flux de lecture sur la socket
+        QDataStream in(client);
+        // Lecture de la taille de la trame (en octets)
+        in >> taille;
+
+        // Vérification que le reste de la trame est complètement arrivé
+        if (client->bytesAvailable() >= (qint64)taille)
+        {
+            QChar commande;
+            in>>commande;
+            QPixmap image;
+            in>>image;
+            switch(commande.toLatin1()){
+            case 'P':
+                envoyerMessage(client,image);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
+void WidgetPopSauceServeur::envoyerMessage(QTcpSocket *emetteur, QPixmap image)
+{
+    foreach (QTcpSocket *client, listeDesClients) {
+        if (client != emetteur) {
+            envoyerPosition(client, image);
+        }
+    }
 }
 

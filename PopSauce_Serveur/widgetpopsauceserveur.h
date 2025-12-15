@@ -27,5 +27,6 @@ private:
     Ui::WidgetPopSauceServeur *ui;
     QTcpServer sockEcoute;
     QList<QTcpSocket*> listeDesClients;
+    void envoyerMessage(QTcpSocket *emetteur, QPixmap image);
 };
 #endif // WIDGETPOPSAUCESERVEUR_H
