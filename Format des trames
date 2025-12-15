@@ -3,7 +3,11 @@ Format des trames
 serveur out :
 Envoie des question
 out << taille << commande << img << question << score << timer;
+        quint16    QChar     png?    QString    int      double
 
+
+out << taille << commande << vrai/faux
+      quint16    QChar        bool
 
 
 client out :
