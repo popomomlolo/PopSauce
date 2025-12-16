@@ -14,7 +14,8 @@ out << taille << commande
 si temps = 0 ou si tous le monde a trouvé les reponse 
 out << taille << commande << reponse
                 QChar        QString
-                'T' 'W'        "moi"
+                'E'        "moi"
+juste E pour END comme ca c'est plus simple coté utilisateur
 
 client out :
 out << taille << reponse;
