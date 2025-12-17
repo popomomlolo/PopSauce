@@ -35,5 +35,8 @@ private:
     QList<QTcpSocket*> listeDesClients;
 
     void envoyerQuestion(QTcpSocket *client);
+    void envoyerVérification(QTcpSocket *client, QString reponse);
+    void envoyerFin(QTcpSocket *client);
+    QString bddReponse();
 };
 #endif // WIDGETPOPSAUCESERVEUR_H
