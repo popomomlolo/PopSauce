@@ -49,7 +49,7 @@ WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
     {
         qDebug()<<"Ouverture de la BDD ok";
     }
-    
+
     connect(&sockEcoute, &QTcpServer::newConnection,
             this, &WidgetPopSauceServeur::onQTcpServer_newConnection);
 }
@@ -90,7 +90,7 @@ void WidgetPopSauceServeur::onQTcpSocket_readyRead()
     QTcpSocket *client=qobject_cast<QTcpSocket *>(sender());
     QDataStream in(client);
     quint16 taille=0;
-
+    QString reponse;
     if (client->bytesAvailable() >= (qint64)sizeof(taille))
     {
         // Création du flux de lecture sur la socket
@@ -101,11 +101,9 @@ void WidgetPopSauceServeur::onQTcpSocket_readyRead()
         // Vérification que le reste de la trame est complètement arrivé
         if (client->bytesAvailable() >= (qint64)taille)
         {
-            QChar commande;
-            in>>commande;
-            QPixmap reponse;
+            
             in>>reponse;
-            //envoyerQuestion(client);
+            envoyerVérification(client,reponse);
         }
     }
 }
@@ -130,10 +128,62 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
     taille = static_cast<quint64>(tampon.size()) - sizeof(taille);
     tampon.seek(0);
     out << taille;
- qDebug() << taille << commande << img << question << score << tempsMilisecondes;
+    qDebug() <<"envoyerQuestion"<< taille << commande << img << question << score << tempsMilisecondes;
     // Envoi
     client->write(tampon.buffer());
 }
 
+void WidgetPopSauceServeur::envoyerVérification(QTcpSocket *client,QString reponse)
+{
+    quint64 taille = 0;
+    QBuffer tampon;
+    QChar commande('Q');
+    QString bonneReponse=bddReponse();
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    if (reponse==bonneReponse)
+    {
+        commande='V';
+    }
+    else
+        {
+            commande='F';
+    }
+    // Construction de la trame
+    out << taille << commande;
 
+    // Calcul et mise à jour de la taille
+    taille = static_cast<quint64>(tampon.size()) - sizeof(taille);
+    tampon.seek(0);
+    out << taille;
+    qDebug() <<"envoyerVérification"<< taille << commande;
+    // Envoi
+    client->write(tampon.buffer());
+}
 
+void WidgetPopSauceServeur::envoyerFin(QTcpSocket *client)
+{
+    quint64 taille = 0;
+    QBuffer tampon;
+    QChar commande('E');
+    QString bonneReponse=bddReponse();
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    // Construction de la trame
+    out << taille << commande<< bonneReponse;
+
+    // Calcul et mise à jour de la taille
+    taille = static_cast<quint64>(tampon.size()) - sizeof(taille);
+    tampon.seek(0);
+    out << taille;
+    qDebug() <<"envoyerFin"<< taille << commande << bonneReponse;
+    // Envoi
+    client->write(tampon.buffer());
+}
+
+QString WidgetPopSauceServeur::bddReponse()
+    {
+    QString reponse;
+        
+    return reponse;
+    }
