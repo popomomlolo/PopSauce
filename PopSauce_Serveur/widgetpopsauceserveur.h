@@ -31,17 +31,18 @@ private slots:
     void onQTcpServer_newConnection();
     void onQTcpSocket_disconnected();
     void onQTcpSocket_readyRead();
+    void onQTcpSocket_errorOccured();
+    void onQTcpSocket_connected();
 private:
     Ui::WidgetPopSauceServeur *ui;
     QTcpServer sockEcoute;
-    QList<QTcpSocket*> listeDesClients;
     QList <Client *> listeClients;
+    QString bReponse,question,indice,alt1,alt2,reponseNorm;
     void envoyerQuestion(QTcpSocket *client);
-    void envoyerVérification(QTcpSocket *client, QString reponse);
+    void envoyerVerification(QTcpSocket *client, QString reponse);
     void envoyerFin(QTcpSocket *client);
     void bddQestion();
     void normaliser(QString reponse);
-    QString bReponse,question,indice,alt1,alt2,reponseNorm;
-
+    int getIndexClient(QTcpSocket *client);
 };
 #endif // WIDGETPOPSAUCESERVEUR_H

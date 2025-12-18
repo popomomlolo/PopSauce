@@ -43,7 +43,9 @@ template <> constexpr inline auto WidgetPopSauceServeur::qt_create_metaobjectdat
         "",
         "onQTcpServer_newConnection",
         "onQTcpSocket_disconnected",
-        "onQTcpSocket_readyRead"
+        "onQTcpSocket_readyRead",
+        "onQTcpSocket_errorOccured",
+        "onQTcpSocket_connected"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -55,6 +57,10 @@ template <> constexpr inline auto WidgetPopSauceServeur::qt_create_metaobjectdat
         QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onQTcpSocket_readyRead'
         QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onQTcpSocket_errorOccured'
+        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onQTcpSocket_connected'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -82,6 +88,8 @@ void WidgetPopSauceServeur::qt_static_metacall(QObject *_o, QMetaObject::Call _c
         case 1: _t->onQTcpServer_newConnection(); break;
         case 2: _t->onQTcpSocket_disconnected(); break;
         case 3: _t->onQTcpSocket_readyRead(); break;
+        case 4: _t->onQTcpSocket_errorOccured(); break;
+        case 5: _t->onQTcpSocket_connected(); break;
         default: ;
         }
     }
@@ -107,14 +115,14 @@ int WidgetPopSauceServeur::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 6;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 6)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 4;
+        _id -= 6;
     }
     return _id;
 }

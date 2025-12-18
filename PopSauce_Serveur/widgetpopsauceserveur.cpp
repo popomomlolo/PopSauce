@@ -69,12 +69,23 @@ void WidgetPopSauceServeur::on_pushButtonLancer_clicked()
 
 void WidgetPopSauceServeur::onQTcpServer_newConnection()
 {
-    QTcpSocket *client = sockEcoute.nextPendingConnection();
-    connect(client, &QTcpSocket::readyRead,
-            this, &WidgetPopSauceServeur::onQTcpSocket_readyRead);
-    connect(client, &QTcpSocket::disconnected,
-            this, &WidgetPopSauceServeur::onQTcpSocket_disconnected);
-    listeDesClients.append(client);
+
+    QTcpSocket *client=sockEcoute.nextPendingConnection();
+
+    connect(client,&QTcpSocket::connected,this,&WidgetPopSauceServeur::onQTcpSocket_connected);
+    connect(client,&QTcpSocket::disconnected,this,&WidgetPopSauceServeur::onQTcpSocket_disconnected);
+    connect(client,&QTcpSocket::readyRead,this,&WidgetPopSauceServeur::onQTcpSocket_readyRead);
+    connect(client,&QTcpSocket::errorOccurred,this,&WidgetPopSauceServeur::onQTcpSocket_errorOccured);
+
+
+    Client *nouveauClient=new Client();
+
+    nouveauClient->setSockClient(client);
+
+
+    listeClients.append(nouveauClient);
+
+
     qDebug() << "Nouvelle connexion de" << client->peerAddress().toString();
     bddQestion();
     envoyerQuestion(client);
@@ -82,43 +93,72 @@ void WidgetPopSauceServeur::onQTcpServer_newConnection()
 
 void WidgetPopSauceServeur::onQTcpSocket_disconnected()
 {
-    QTcpSocket *client = qobject_cast<QTcpSocket*>(sender());
-    qDebug() << "Déconnexion de" << client->peerAddress().toString();
-    listeDesClients.removeOne(client);
-    /*QTcpSocket *client=qobject_cast<QTcpSocket *>(sender());
-    ui->textEditMessages->append("disconnected client " +client->peerAddress().toString());
+    QTcpSocket *client=qobject_cast<QTcpSocket *>(sender());
+    ui->textEdit->append("disconnected client " +client->peerAddress().toString());
     int index= getIndexClient(client);
     if (index!=-1)
     {
         listeClients.removeAt(index);
-    }*/
+    }
 }
 
 void WidgetPopSauceServeur::onQTcpSocket_readyRead()
 {
     QTcpSocket *client=qobject_cast<QTcpSocket *>(sender());
-    QDataStream in(client);
+
     quint64 taille=0;
     QString reponse;
+    QChar commande;
+    qDebug()<<"reception";
     if (client->bytesAvailable() >= (qint64)sizeof(taille))
     {
         // Création du flux de lecture sur la socket
         QDataStream in(client);
         // Lecture de la taille de la trame (en octets)
         in >> taille;
+        qDebug()<<"taille " <<taille;
+
 
         // Vérification que le reste de la trame est complètement arrivé
         if (client->bytesAvailable() >= (qint64)taille)
         {
             
-            in>>reponse;
-            qDebug() << "reponse utilisateur "<<reponse;
-            ui->textEdit->append("reponse utilisateur "+reponse);
-            envoyerVérification(client,reponse);
+            qDebug()<<"trame complete";
 
+            in>>commande;
+            qDebug()<<"commande : "<<commande;
+
+            switch (commande.toLatin1()) {
+            case 'R':
+                in>>reponse;
+                qDebug() << "reponse utilisateur "<<reponse;
+                ui->textEdit->append("reponse utilisateur "+reponse);
+                envoyerVerification(client,reponse);
+                break;
+            case 'I':{
+                QString pseudo,mail,mdp,verifMdp;
+                qDebug() << "Inscription client "<<pseudo<<mail<<mdp<<verifMdp;
+                break;}
+            case 'C':{
+                QString pseudo,mdp;
+                qDebug() << "Connexion client "<<pseudo<<mdp;
+                break;}
+            default:
+                break;
+            }
         }
     }
+}
 
+void WidgetPopSauceServeur::onQTcpSocket_errorOccured()
+{
+    QTcpSocket *client=qobject_cast<QTcpSocket*>(sender());
+    qDebug() << "Nouvelle connexion de" << client->peerAddress().toString();
+}
+
+void WidgetPopSauceServeur::onQTcpSocket_connected()
+{
+    ui->textEdit->append("connected client");
 }
 
 void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
@@ -145,7 +185,7 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
     client->write(tampon.buffer());
 }
 
-void WidgetPopSauceServeur::envoyerVérification(QTcpSocket *client,QString reponse)
+void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString reponse)
 {
     quint64 taille = 0;
     QBuffer tampon;
@@ -197,7 +237,17 @@ void WidgetPopSauceServeur::envoyerFin(QTcpSocket *client)
 
 void WidgetPopSauceServeur::bddQestion()
 {
-    int nbRandom = rand() % 5 + 1; //Nombre random entre 1 et 2 (seuleument changer le premier nb pas le deuxieme)
+    int nbQuestion;
+    QSqlQuery requete("SELECT COUNT(id_quest) FROM question;" );
+    if (requete.exec()){
+        while(requete.next())
+        {
+            nbQuestion=requete.value("COUNT(id_quest)").toInt();
+
+            qDebug() <<"Nombre de question"<< nbQuestion;
+        }
+    }
+    int nbRandom = rand() % nbQuestion + 1; //Nombre random entre 1 et 2 (seuleument changer le premier nb pas le deuxieme)
     QSqlQuery requetePrepare;
 
     requetePrepare.prepare("SELECT texte_question, indice, reponse,option_a ,option_b FROM question WHERE id_quest = :id;");
@@ -239,6 +289,30 @@ void WidgetPopSauceServeur::normaliser(QString reponse)
     reponseNorm.remove('\n');
 
     qDebug() << reponseNorm;
+}
+
+int WidgetPopSauceServeur::getIndexClient(QTcpSocket *client)
+{
+    // Initialisation des variables pour la recherche
+    int i = 0;
+    int index = -1;
+    int tailleListe = listeClients.size();
+    // Parcours de la liste des clients pour trouver celui correspondant à la socket
+    // La condition i < tailleListe DOIT être en premier pour éviter un dépassement
+    while (i < tailleListe && listeClients.at(i)->getSockClient() != client)
+    {
+        i++;
+    }
+
+    // Si le client a été trouvé, on retourne son index
+    if (i < tailleListe)
+    {
+        index = i;
+    }
+
+    // Retourne l'index du client ou -1 si non trouvé
+    return index;
+
 }
 
 

@@ -20,13 +20,14 @@ WidgetPopSauceClient::~WidgetPopSauceClient()
 
 void WidgetPopSauceClient::envoyerDonnees()
 {
-    quint64 taille;
+    quint64 taille=0;
     QBuffer tampon;
     QString reponse=ui->lineEditReponse->text();
+    QChar commande='R';
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
-    out<<taille<<reponse;
+    out<<taille<<commande<<reponse;
     taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
     tampon.seek(0);
     out<<taille;
@@ -61,6 +62,8 @@ void WidgetPopSauceClient::onQTcpSocket_connected()
 void WidgetPopSauceClient::onQTcpSocket_disconnected()
 {
     qDebug() << "Déconnecté";
+
+
 }
 
 void WidgetPopSauceClient::onQTcpSocket_readyRead()
