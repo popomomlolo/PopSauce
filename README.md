@@ -19,6 +19,8 @@ SELECT reponse FROM "question" WHERE id_quest = :id;
 
     void WidgetPopSauceServeur::recupererQuestionIndice()
     {
+    int nbRandom = rand() % 2 + 1; //Nombre random entre 1 et 2 (seuleument changer le premier nb pas le deuxieme)
+    //srand(time(nullptr));
     QSqlQuery requetePrepare;
     requetePrepare.prepare("SELECT texte_question, indice, reponse FROM "question" WHERE id_quest = :id;");
 
