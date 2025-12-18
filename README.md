@@ -62,5 +62,52 @@ SELECT reponse FROM "question" WHERE id_quest = :id;
     reponseNorm.remove('\t');
     reponseNorm.remove('\n');
 
-    qDebug() << reponseNorm;
-}
+    qDebug() << reponseNorm;}
+
+  ============================================================
+  
+    {
+      int nbQuestion;
+      QSqlQuery requete("SELECT COUNT(id_quest) FROM question;" );
+        if (requete.exec()){
+            while(requete.next())
+            {  
+                  nbQuestion=requete.value("COUNT(id_quest)").toInt();
+
+                qDebug() <<"Nombre de question"<< nbQuestion;
+            }
+        }}
+
+
+
+
+readyread
+in>>commande;
+            switch (commande.toLatin1()) {
+            case 'R':
+                in>>reponse;
+                qDebug() << "reponse utilisateur "<<reponse;
+                ui->textEdit->append("reponse utilisateur "+reponse);
+                envoyerVérification(client,reponse);
+                break;
+            case 'I':{
+                QString pseudo,mail,mdp,verifMdp;
+                qDebug() << "Inscription client "<<pseudo<<mail<<mdp<<verifMdp;
+                break;}
+            case 'C':{
+                QString pseudo,mdp;
+                qDebug() << "Connexion client "<<pseudo<<mdp;
+                break;}
+            default:
+                break;
+            }
+            
+
+
+
+
+    QChar commande='R';
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    out<<taille<<commande<<reponse;

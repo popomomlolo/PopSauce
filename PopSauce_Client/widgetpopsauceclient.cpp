@@ -27,11 +27,15 @@ void WidgetPopSauceClient::envoyerDonnees()
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
+<<<<<<< HEAD
+=======
+    commande='R';
+>>>>>>> 203b2ab2787fc2ef2f0621d9b51144b6ab0487ee
     out<<taille<<commande<<reponse;
     taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
     tampon.seek(0);
     out<<taille;
-    qDebug() <<"envoyerDonnees"<< reponse;
+    qDebug() <<"envoyerDonnees"<< commande << reponse;
     socketJoueur.write(tampon.buffer());
 
     ui->labelAfficherReponseEcrit->setText(reponse);
@@ -150,3 +154,59 @@ void WidgetPopSauceClient::on_pushButtonEnvoyer_clicked()
     envoyerDonnees();
 }
 
+void WidgetPopSauceClient::on_pushButtonInscription_clicked()
+{
+    pseudo = ui->lineEditInscrUser->text();
+    mail = ui->lineEditMail->text();
+    mdp = ui->lineEditInscrMdp->text();
+    verifMdp = ui->lineEditInscrMdpVerif->text();
+
+    envoyerInscription(pseudo, mail, mdp, verifMdp);
+
+    qDebug() << pseudo << mail << mdp << verifMdp;
+}
+
+void WidgetPopSauceClient::envoyerInscription(QString pseudo, QString mail, QString mdp, QString mdp2)
+{
+    quint64 taille;
+    QBuffer tampon;
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    commande='I';
+    out<<taille<<commande<<pseudo<<mail<<mdp<<mdp2;
+    taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
+    tampon.seek(0);
+    out<<taille;
+    qDebug() <<"Donnez envoyee"<<commande<<pseudo<<mail<<mdp<<mdp2;
+    socketJoueur.write(tampon.buffer());
+
+
+}
+
+
+void WidgetPopSauceClient::on_pushButtonConnexionCompte_clicked()
+{
+    pseudo = ui->lineEditUser->text();
+    mdp = ui->lineEditMdp->text();
+
+    envoyerConnexionCompte(pseudo, mdp);
+
+    qDebug()<< "Donne envoye" << commande << pseudo << mdp;
+}
+
+void WidgetPopSauceClient::envoyerConnexionCompte(QString pseudo, QString mdp)
+{
+    quint64 taille;
+    QBuffer tampon;
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    commande='C';
+    out<<taille<<commande<<pseudo<<mdp;
+    taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
+    tampon.seek(0);
+    out<<taille;
+    qDebug() <<"Donnez envoyee"<<commande<<pseudo<<mdp;
+    socketJoueur.write(tampon.buffer());
+}
