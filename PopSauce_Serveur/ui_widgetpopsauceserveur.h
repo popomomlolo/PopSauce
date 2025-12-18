@@ -25,12 +25,13 @@ class Ui_WidgetPopSauceServeur
 {
 public:
     QLabel *labelImage;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout;
     QTextEdit *textEdit;
     QHBoxLayout *horizontalLayout;
     QPushButton *pushButtonLancer;
     QSpinBox *spinBoxPort;
+    QPushButton *pushButton;
 
     void setupUi(QWidget *WidgetPopSauceServeur)
     {
@@ -40,25 +41,25 @@ public:
         labelImage = new QLabel(WidgetPopSauceServeur);
         labelImage->setObjectName("labelImage");
         labelImage->setGeometry(QRect(130, 130, 256, 15));
-        widget = new QWidget(WidgetPopSauceServeur);
-        widget->setObjectName("widget");
-        widget->setGeometry(QRect(250, 190, 258, 225));
-        verticalLayout = new QVBoxLayout(widget);
+        layoutWidget = new QWidget(WidgetPopSauceServeur);
+        layoutWidget->setObjectName("layoutWidget");
+        layoutWidget->setGeometry(QRect(250, 190, 258, 225));
+        verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setObjectName("verticalLayout");
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        textEdit = new QTextEdit(widget);
+        textEdit = new QTextEdit(layoutWidget);
         textEdit->setObjectName("textEdit");
 
         verticalLayout->addWidget(textEdit);
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName("horizontalLayout");
-        pushButtonLancer = new QPushButton(widget);
+        pushButtonLancer = new QPushButton(layoutWidget);
         pushButtonLancer->setObjectName("pushButtonLancer");
 
         horizontalLayout->addWidget(pushButtonLancer);
 
-        spinBoxPort = new QSpinBox(widget);
+        spinBoxPort = new QSpinBox(layoutWidget);
         spinBoxPort->setObjectName("spinBoxPort");
         spinBoxPort->setMaximum(70000);
         spinBoxPort->setValue(8888);
@@ -68,6 +69,9 @@ public:
 
         verticalLayout->addLayout(horizontalLayout);
 
+        pushButton = new QPushButton(WidgetPopSauceServeur);
+        pushButton->setObjectName("pushButton");
+        pushButton->setGeometry(QRect(370, 470, 84, 23));
 
         retranslateUi(WidgetPopSauceServeur);
 
@@ -79,6 +83,7 @@ public:
         WidgetPopSauceServeur->setWindowTitle(QCoreApplication::translate("WidgetPopSauceServeur", "WidgetPopSauceServeur", nullptr));
         labelImage->setText(QCoreApplication::translate("WidgetPopSauceServeur", "TextLabel", nullptr));
         pushButtonLancer->setText(QCoreApplication::translate("WidgetPopSauceServeur", "Lancer", nullptr));
+        pushButton->setText(QCoreApplication::translate("WidgetPopSauceServeur", "PushButton", nullptr));
     } // retranslateUi
 
 };

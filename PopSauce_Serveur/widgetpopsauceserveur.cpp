@@ -85,6 +85,13 @@ void WidgetPopSauceServeur::onQTcpSocket_disconnected()
     QTcpSocket *client = qobject_cast<QTcpSocket*>(sender());
     qDebug() << "Déconnexion de" << client->peerAddress().toString();
     listeDesClients.removeOne(client);
+    /*QTcpSocket *client=qobject_cast<QTcpSocket *>(sender());
+    ui->textEditMessages->append("disconnected client " +client->peerAddress().toString());
+    int index= getIndexClient(client);
+    if (index!=-1)
+    {
+        listeClients.removeAt(index);
+    }*/
 }
 
 void WidgetPopSauceServeur::onQTcpSocket_readyRead()
@@ -108,6 +115,7 @@ void WidgetPopSauceServeur::onQTcpSocket_readyRead()
             qDebug() << "reponse utilisateur "<<reponse;
             ui->textEdit->append("reponse utilisateur "+reponse);
             envoyerVérification(client,reponse);
+
         }
     }
 
@@ -141,18 +149,19 @@ void WidgetPopSauceServeur::envoyerVérification(QTcpSocket *client,QString repo
 {
     quint64 taille = 0;
     QBuffer tampon;
-    QChar commande('Q');
+    QChar commande('F');
     //QString bonneReponse=bddReponse();
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
-    if (reponse==bReponse || reponse==alt1 || reponse==alt2)
-    {
-        commande='V';
+    normaliser(reponse);
+    if (reponseNorm!=nullptr){
+        if (reponseNorm==bReponse || reponseNorm==alt1 || reponseNorm==alt2)
+        {
+            commande='V';
+
+        }
     }
-    else
-    {
-        commande='F';
-    }
+
     // Construction de la trame
     out << taille << commande;
 
@@ -188,7 +197,7 @@ void WidgetPopSauceServeur::envoyerFin(QTcpSocket *client)
 
 void WidgetPopSauceServeur::bddQestion()
 {
-    int nbRandom = rand() % 2 + 1; //Nombre random entre 1 et 2 (seuleument changer le premier nb pas le deuxieme)
+    int nbRandom = rand() % 5 + 1; //Nombre random entre 1 et 2 (seuleument changer le premier nb pas le deuxieme)
     QSqlQuery requetePrepare;
 
     requetePrepare.prepare("SELECT texte_question, indice, reponse,option_a ,option_b FROM question WHERE id_quest = :id;");
@@ -208,6 +217,28 @@ void WidgetPopSauceServeur::bddQestion()
         qDebug()<<question << indice << bReponse;
     }
 
+}
+
+void WidgetPopSauceServeur::normaliser(QString reponse)
+{
+    reponseNorm = reponse;
+
+    // 1. minuscules
+    reponseNorm = reponseNorm.toLower();
+
+    static const QString accents  = "àâäáãåçèéêëìíîïñòóôöõùúûüýÿ";
+    static const QString sansAcc   = "aaaaaaceeeeiiiinooooouuuuyy";
+
+    for (int i = 0; i < accents.size(); ++i){
+        reponseNorm.replace(accents[i], sansAcc[i]);
+    }
+
+    // 3. suppression des espaces
+    reponseNorm.remove(' ');
+    reponseNorm.remove('\t');
+    reponseNorm.remove('\n');
+
+    qDebug() << reponseNorm;
 }
 
 

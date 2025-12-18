@@ -13,6 +13,7 @@
 #include <QSettings>
 #include <QFileInfo>
 #include <QRandomGenerator>
+#include "client.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class WidgetPopSauceServeur; }
@@ -34,11 +35,13 @@ private:
     Ui::WidgetPopSauceServeur *ui;
     QTcpServer sockEcoute;
     QList<QTcpSocket*> listeDesClients;
-
+    QList <Client *> listeClients;
     void envoyerQuestion(QTcpSocket *client);
     void envoyerVérification(QTcpSocket *client, QString reponse);
     void envoyerFin(QTcpSocket *client);
     void bddQestion();
-    QString bReponse,question,indice,alt1,alt2;
+    void normaliser(QString reponse);
+    QString bReponse,question,indice,alt1,alt2,reponseNorm;
+
 };
 #endif // WIDGETPOPSAUCESERVEUR_H

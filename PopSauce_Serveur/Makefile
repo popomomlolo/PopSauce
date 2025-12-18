@@ -52,9 +52,11 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = main.cpp \
+SOURCES       = client.cpp \
+		main.cpp \
 		widgetpopsauceserveur.cpp moc_widgetpopsauceserveur.cpp
-OBJECTS       = main.o \
+OBJECTS       = client.o \
+		main.o \
 		widgetpopsauceserveur.o \
 		moc_widgetpopsauceserveur.o
 DIST          = /opt/Qt/6.9.1/gcc_64/mkspecs/features/spec_pre.prf \
@@ -346,6 +348,7 @@ DIST          = /opt/Qt/6.9.1/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/qt_config.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/toolchain.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/default_pre.prf \
@@ -367,7 +370,9 @@ DIST          = /opt/Qt/6.9.1/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/exceptions.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/yacc.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/lex.prf \
-		PopSauce_Serveur.pro widgetpopsauceserveur.h main.cpp \
+		PopSauce_Serveur.pro client.h \
+		widgetpopsauceserveur.h client.cpp \
+		main.cpp \
 		widgetpopsauceserveur.cpp
 QMAKE_TARGET  = PopSauce_Serveur
 DESTDIR       = 
@@ -669,6 +674,7 @@ Makefile: PopSauce_Serveur.pro /opt/Qt/6.9.1/gcc_64/mkspecs/linux-g++/qmake.conf
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/qt_config.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/toolchain.prf \
 		/opt/Qt/6.9.1/gcc_64/mkspecs/features/default_pre.prf \
@@ -986,6 +992,7 @@ Makefile: PopSauce_Serveur.pro /opt/Qt/6.9.1/gcc_64/mkspecs/linux-g++/qmake.conf
 /opt/Qt/6.9.1/gcc_64/mkspecs/features/qt_config.prf:
 /opt/Qt/6.9.1/gcc_64/mkspecs/linux-g++/qmake.conf:
 /opt/Qt/6.9.1/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /opt/Qt/6.9.1/gcc_64/mkspecs/features/exclusive_builds.prf:
 /opt/Qt/6.9.1/gcc_64/mkspecs/features/toolchain.prf:
 /opt/Qt/6.9.1/gcc_64/mkspecs/features/default_pre.prf:
@@ -1028,8 +1035,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/Qt/6.9.1/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents widgetpopsauceserveur.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp widgetpopsauceserveur.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents client.h widgetpopsauceserveur.h $(DISTDIR)/
+	$(COPY_FILE) --parents client.cpp main.cpp widgetpopsauceserveur.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents widgetpopsauceserveur.ui $(DISTDIR)/
 
 
@@ -1297,6 +1304,9 @@ moc_widgetpopsauceserveur.cpp: widgetpopsauceserveur.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtCore/qdatetime.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcalendar.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtimezone.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/QRandomGenerator \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qrandom.h \
+		client.h \
 		moc_predefs.h \
 		/opt/Qt/6.9.1/gcc_64/libexec/moc
 	/opt/Qt/6.9.1/gcc_64/libexec/moc $(DEFINES) --include /home/USERS/ELEVES/CIEL2024/nrobin/QT/c++/Noel/PopSauce_Serveur/moc_predefs.h -I/opt/Qt/6.9.1/gcc_64/mkspecs/linux-g++ -I/home/USERS/ELEVES/CIEL2024/nrobin/QT/c++/Noel/PopSauce_Serveur -I/opt/Qt/6.9.1/gcc_64/include -I/opt/Qt/6.9.1/gcc_64/include/QtWidgets -I/opt/Qt/6.9.1/gcc_64/include/QtGui -I/opt/Qt/6.9.1/gcc_64/include/QtNetwork -I/opt/Qt/6.9.1/gcc_64/include/QtSql -I/opt/Qt/6.9.1/gcc_64/include/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/x86_64-linux-gnu/include -I/usr/include/x86_64-linux-gnu -I/usr/include widgetpopsauceserveur.h -o moc_widgetpopsauceserveur.cpp
@@ -1321,6 +1331,142 @@ compiler_lex_clean:
 compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
+
+client.o: client.cpp client.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtNetwork/QTcpSocket \
+		/opt/Qt/6.9.1/gcc_64/include/QtNetwork/qtcpsocket.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtNetwork/qtnetworkglobal.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtcoreglobal.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtversionchecks.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtconfiginclude.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qconfig.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtcore-config.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtconfigmacros.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtdeprecationdefinitions.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcompilerdetection.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qprocessordetection.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qsystemdetection.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtcoreexports.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtdeprecationmarkers.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtclasshelpermacros.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtNetwork/qtnetwork-config.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtNetwork/qtnetworkexports.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtNetwork/qabstractsocket.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtNetwork/qhostaddress.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstring.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qchar.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qglobal.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtpreprocessorsupport.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qassert.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtnoop.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtypes.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtversion.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtypeinfo.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcontainerfwd.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qsysinfo.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qlogging.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qflags.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcompare_impl.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qatomic.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qbasicatomic.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qgenericatomic.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qyieldcpu.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qconstructormacros.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qdarwinhelpers.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qexceptionhandling.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qforeach.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qttypetraits.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qfunctionpointer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qglobalstatic.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qmalloc.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qminmax.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qnumeric.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qoverload.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qswap.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtenvironmentvariables.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtresource.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qttranslation.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qversiontagging.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcompare.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstdlibdetection.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcomparehelpers.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/q20type_traits.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringview.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qbytearray.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qrefcount.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qnamespace.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtmetamacros.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qarraydata.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qpair.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qarraydatapointer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qarraydataops.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcontainertools_impl.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qxptype_traits.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/q20functional.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/q20memory.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/q17memory.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qbytearrayalgorithms.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qbytearrayview.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringfwd.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringliteral.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringalgorithms.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qlatin1stringview.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qanystringview.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qutf8stringview.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringtokenizer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringbuilder.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringconverter.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringconverter_base.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qhashfunctions.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qiodevicebase.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qobject.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qobjectdefs.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qfunctionaltools_impl.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qlist.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qiterator.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qbytearraylist.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringlist.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qalgorithms.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qstringmatcher.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcoreevent.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qbasictimer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qeventloop.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qdeadlinetimer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qelapsedtimer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qmetatype.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qdatastream.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qscopedpointer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qfloat16.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qmath.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtformat_impl.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qiterable.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qmetacontainer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcontainerinfo.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtaggedpointer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qscopeguard.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qobject_impl.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qbindingstorage.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qspan.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/q20iterator.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qshareddata_impl.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qset.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qvarlengtharray.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/q23utility.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/q20utility.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o client.o client.cpp
 
 main.o: main.cpp widgetpopsauceserveur.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/QWidget \
@@ -1554,6 +1700,9 @@ main.o: main.cpp widgetpopsauceserveur.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtCore/qdatetime.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcalendar.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtimezone.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/QRandomGenerator \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qrandom.h \
+		client.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/QApplication \
 		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
@@ -1790,7 +1939,39 @@ widgetpopsauceserveur.o: widgetpopsauceserveur.cpp widgetpopsauceserveur.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtCore/qdatetime.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtCore/qcalendar.h \
 		/opt/Qt/6.9.1/gcc_64/include/QtCore/qtimezone.h \
-		ui_widgetpopsauceserveur.h
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/QRandomGenerator \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qrandom.h \
+		client.h \
+		ui_widgetpopsauceserveur.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/QVariant \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/QApplication \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qapplication.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/QHBoxLayout \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qboxlayout.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qlayout.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qlayoutitem.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qgridlayout.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/QLabel \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qlabel.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qframe.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtGui/qpicture.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtGui/qtextdocument.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/QPushButton \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qpushbutton.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/QSpinBox \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qspinbox.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtGui/qvalidator.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtCore/qregularexpression.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/QTextEdit \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qtextedit.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtGui/qtextoption.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtGui/qtextcursor.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtGui/qtextformat.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtGui/qpen.h \
+		/opt/Qt/6.9.1/gcc_64/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o widgetpopsauceserveur.o widgetpopsauceserveur.cpp
 
 moc_widgetpopsauceserveur.o: moc_widgetpopsauceserveur.cpp 
