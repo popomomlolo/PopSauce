@@ -106,3 +106,8 @@ in>>commande;
 
 
 
+    QChar commande='R';
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    out<<taille<<commande<<reponse;
