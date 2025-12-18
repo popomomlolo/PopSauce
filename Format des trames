@@ -9,7 +9,7 @@ out << taille << commande << img << question << score << timer;
 Verifie si la reponse est vrai ou faux
 out << taille << commande 
       quint16    QChar       
-                'V' 'F'
+                'V' 'F' 
 
 si temps = 0 ou si tous le monde a trouvé les reponse 
 out << taille << commande << reponse
@@ -19,3 +19,9 @@ juste E pour END comme ca c'est plus simple coté utilisateur
 
 client out :
 out << taille << reponse;
+
+Inscription client :
+out << taille << commande << pseudo << mail << mdp << verifMdp;
+
+Connexion client :
+out << taille << commande << pseudo << mdp;
