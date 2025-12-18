@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>776</width>
+    <width>940</width>
     <height>580</height>
    </rect>
   </property>
@@ -127,6 +127,19 @@
      </rect>
     </property>
    </widget>
+  </widget>
+  <widget class="QLabel" name="labelAfficherReponseEcrit">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>130</y>
+     <width>121</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
   </widget>
  </widget>
  <resources/>

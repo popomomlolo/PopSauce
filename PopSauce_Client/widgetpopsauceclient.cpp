@@ -18,6 +18,24 @@ WidgetPopSauceClient::~WidgetPopSauceClient()
     delete ui;
 }
 
+void WidgetPopSauceClient::envoyerDonnees()
+{
+    quint64 taille;
+    QBuffer tampon;
+    QString reponse=ui->lineEditReponse->text();
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    out<<taille<<reponse;
+    taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
+    tampon.seek(0);
+    out<<taille;
+    qDebug() <<"envoyerDonnees"<< reponse;
+    socketJoueur.write(tampon.buffer());
+
+    ui->labelAfficherReponseEcrit->setText(reponse);
+}
+
 
 void WidgetPopSauceClient::on_pushButtonConnexion_clicked()
 {
@@ -141,6 +159,9 @@ void WidgetPopSauceClient::onQTcpSocket_readyRead()
                 ui->labelImage->setScaledContents(true);
                 tailleAttendue=0;
                 enCoursDeLecture=false;
+
+                ui->labelQuestion->setText(question);
+                ui->labelQuestion->setAlignment(Qt::AlignCenter);
             }
 
         }
@@ -190,5 +211,7 @@ void WidgetPopSauceClient::on_pushButtonEnvoyer_clicked()
 
     // ui->labelQuestion->setText("Qui est-ce ?");
     // ui->labelQuestion->setAlignment(Qt::AlignCenter);
+
+    envoyerDonnees();
 }
 

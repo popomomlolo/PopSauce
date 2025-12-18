@@ -17,10 +17,14 @@ SELECT reponse FROM "question" WHERE id_quest = :id;
   Fonction pour recuperer une Question et son indice avec le meme ID
 
 
+#include <QRandomGenerator>
+//srand(time(nullptr)); DANS LE CONSTRUCTEUR
     void WidgetPopSauceServeur::recupererQuestionIndice()
     {
+    int nbRandom = rand() % 2 + 1; //Nombre random entre 1 et 2 (seuleument changer le premier nb pas le deuxieme)
+    
     QSqlQuery requetePrepare;
-    requetePrepare.prepare("SELECT question, indice FROM "question" WHERE id_quest = :id;");
+    requetePrepare.prepare("SELECT texte_question, indice, reponse FROM "question" WHERE id_quest = :id;");
 
     //requetePrepare.bindValue(":id",nbRandom);
     if (!requetePrepare.exec()){
@@ -30,8 +34,10 @@ SELECT reponse FROM "question" WHERE id_quest = :id;
     QString question, indice;
     while(requetePrepare.next())
     {
-        question=requetePrepare.value("question").toString();
+        question=requetePrepare.value("texte_question").toString();
         indice=requetePrepare.value("indice").toString();
-        qDebug()<<question << indice;
+        reponse=requetePrepare.value("reponse").toString();
+        
+        qDebug()<<question << indice << reponse;
     }
     }
