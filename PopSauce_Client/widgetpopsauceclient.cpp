@@ -32,6 +32,8 @@ void WidgetPopSauceClient::envoyerDonnees()
     out<<taille;
     qDebug() <<"envoyerDonnees"<< reponse;
     socketJoueur.write(tampon.buffer());
+
+    ui->labelAfficherReponseEcrit->setText(reponse);
 }
 
 
