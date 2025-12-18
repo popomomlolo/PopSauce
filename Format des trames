@@ -19,3 +19,9 @@ juste E pour END comme ca c'est plus simple coté utilisateur
 
 client out :
 out << taille << reponse;
+
+Inscription client :
+out << taille << pseudo << mail << mdp << verifMdp;
+
+Connexion client :
+out << taille << pseudo << mdp;
