@@ -12,6 +12,7 @@
 #include <QSqlQuery>
 #include <QSettings>
 #include <QFileInfo>
+#include <QRandomGenerator>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class WidgetPopSauceServeur; }
@@ -37,6 +38,7 @@ private:
     void envoyerQuestion(QTcpSocket *client);
     void envoyerVérification(QTcpSocket *client, QString reponse);
     void envoyerFin(QTcpSocket *client);
-    QString bddReponse();
+    void bddQestion();
+    QString bReponse,question,indice,alt1,alt2;
 };
 #endif // WIDGETPOPSAUCESERVEUR_H

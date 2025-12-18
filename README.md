@@ -41,3 +41,26 @@ SELECT reponse FROM "question" WHERE id_quest = :id;
         qDebug()<<question << indice << reponse;
     }
     }
+===================================================================
+
+    void Widget::normaliser()
+    {
+    QString reponseNorm = "AzeRtyUé2éÊAa esCap         Tabuhgu";
+
+    // 1. minuscules
+    reponseNorm = reponseNorm.toLower();
+
+    static const QString accents  = "àâäáãåçèéêëìíîïñòóôöõùúûüýÿ";
+    static const QString sansAcc   = "aaaaaaceeeeiiiinooooouuuuyy";
+
+    for (int i = 0; i < accents.size(); ++i){
+            reponseNorm.replace(accents[i], sansAcc[i]);
+    }
+
+    // 3. suppression des espaces
+    reponseNorm.remove(' ');
+    reponseNorm.remove('\t');
+    reponseNorm.remove('\n');
+
+    qDebug() << reponseNorm;
+}
