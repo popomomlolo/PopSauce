@@ -121,6 +121,14 @@ void WidgetPopSauceClient::onQTcpSocket_readyRead()
                 ui->labelVraiFaux->setText("Mauvaise réponse");
                 qDebug()<<"case F";
                 break;
+            case 'E':
+            {
+                QString reponse;
+                in >> reponse;
+                ui->labelVraiFaux->setText(reponse);
+                qDebug()<<"case E";
+                break;
+            }
             default:
                 break;
             }
