@@ -20,7 +20,7 @@ SELECT reponse FROM "question" WHERE id_quest = :id;
     void WidgetPopSauceServeur::recupererQuestionIndice()
     {
     QSqlQuery requetePrepare;
-    requetePrepare.prepare("SELECT question, indice FROM "question" WHERE id_quest = :id;");
+    requetePrepare.prepare("SELECT texte_question, indice, reponse FROM "question" WHERE id_quest = :id;");
 
     //requetePrepare.bindValue(":id",nbRandom);
     if (!requetePrepare.exec()){
@@ -30,8 +30,10 @@ SELECT reponse FROM "question" WHERE id_quest = :id;
     QString question, indice;
     while(requetePrepare.next())
     {
-        question=requetePrepare.value("question").toString();
+        question=requetePrepare.value("texte_question").toString();
         indice=requetePrepare.value("indice").toString();
-        qDebug()<<question << indice;
+        reponse=requetePrepare.value("reponse").toString();
+        
+        qDebug()<<question << indice << reponse;
     }
     }
