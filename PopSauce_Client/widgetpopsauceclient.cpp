@@ -147,3 +147,78 @@ void WidgetPopSauceClient::on_pushButtonEnvoyer_clicked()
     envoyerDonnees();
 }
 
+void WidgetPopSauceClient::on_pushButtonInscription_clicked()
+{
+    pseudo = ui->lineEditNomUtilisateurInscription->text();
+    mail = ui->lineEditEmail->text();
+    mdp = ui->lineEditMdpInscription->text();
+    verifMdp = ui->lineEditVerifMdp->text();
+
+    envoyerInscription(pseudo, mail, mdp, verifMdp);
+
+    qDebug() << pseudo << mail << mdp << verifMdp;
+}
+
+void WidgetPopSauceClient::envoyerInscription(QString pseudo, QString mail, QString mdp, QString mdp2)
+{
+    quint64 taille;
+    QBuffer tampon;
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    out<<taille<<pseudo<<mail<<mdp<<mdp2;
+    taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
+    tampon.seek(0);
+    out<<taille;
+    qDebug() <<"Donnez envoyee"<<pseudo<<mail<<mdp<<mdp2;
+    socketJoueur.write(tampon.buffer());
+
+
+}
+
+
+void WidgetPopSauceClient::on_pushButtonConnexionCompte_clicked()
+{
+    pseudo = ui->lineEditNomUtilisateur->text();
+    mdp = ui->lineEditMdpConnexion->text();
+
+    envoyerConnexionCompte(pseudo, mdp);
+
+    qDebug() << pseudo << mdp;
+}
+
+void WidgetPopSauceClient::envoyerConnexionCompte(QString pseudo, QString mdp)
+{
+    quint64 taille;
+    QBuffer tampon;
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    out<<taille<<pseudo<<mdp;
+    taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
+    tampon.seek(0);
+    out<<taille;
+    qDebug() <<"Donnez envoyee"<<pseudo<<mdp;
+    socketJoueur.write(tampon.buffer());
+}
+
+void WidgetPopSauceClient::envoyerInscriptionCompte(QString pseudo, QString mdp)
+{
+    quint64 taille;
+    QBuffer tampon;
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+    out<<taille<<pseudo<<mdp;
+    taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
+    tampon.seek(0);
+    out<<taille;
+    qDebug() <<"Donnez envoyee"<<pseudo<<mdp;
+    socketJoueur.write(tampon.buffer());
+}
+
+void WidgetPopSauceClient::on_pushButtoninscrire_clicked()
+{
+
+}
+

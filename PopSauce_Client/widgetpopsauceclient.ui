@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>940</width>
-    <height>580</height>
+    <width>1045</width>
+    <height>656</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>222</width>
+     <width>471</width>
      <height>121</height>
     </rect>
    </property>
@@ -26,17 +26,24 @@
     <string>Connexion</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0" colspan="2">
-     <widget class="QPushButton" name="pushButtonConnexion">
+    <item row="1" column="2">
+     <widget class="QLabel" name="labelMdpConnexion">
       <property name="text">
-       <string>Connexion</string>
+       <string>Mot de passe : </string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEditIP">
+    <item row="0" column="2">
+     <widget class="QLabel" name="labelNomUtilisateur">
       <property name="text">
-       <string>172.18.58.93</string>
+       <string>Nom d'utilisateur : </string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="labelIP">
+      <property name="text">
+       <string>Adresse IP :</string>
       </property>
      </widget>
     </item>
@@ -57,10 +64,30 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="labelIP">
+    <item row="2" column="0" colspan="2">
+     <widget class="QPushButton" name="pushButtonConnexion">
       <property name="text">
-       <string>Adresse IP :</string>
+       <string>Connexion</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="lineEditIP">
+      <property name="text">
+       <string>172.18.58.93</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QLineEdit" name="lineEditNomUtilisateur"/>
+    </item>
+    <item row="1" column="3">
+     <widget class="QLineEdit" name="lineEditMdpConnexion"/>
+    </item>
+    <item row="2" column="2" colspan="2">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Connexion a votre compte</string>
       </property>
      </widget>
     </item>
@@ -71,8 +98,8 @@
     <rect>
      <x>0</x>
      <y>120</y>
-     <width>761</width>
-     <height>451</height>
+     <width>1041</width>
+     <height>501</height>
     </rect>
    </property>
    <property name="title">
@@ -81,10 +108,10 @@
    <widget class="QLabel" name="labelImage">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>240</x>
       <y>30</y>
-      <width>691</width>
-      <height>291</height>
+      <width>581</width>
+      <height>301</height>
      </rect>
     </property>
     <property name="text">
@@ -96,7 +123,7 @@
      <rect>
       <x>30</x>
       <y>340</y>
-      <width>701</width>
+      <width>981</width>
       <height>20</height>
      </rect>
     </property>
@@ -122,37 +149,99 @@
      <rect>
       <x>30</x>
       <y>380</y>
-      <width>691</width>
+      <width>981</width>
       <height>22</height>
      </rect>
     </property>
    </widget>
+   <widget class="QLabel" name="labelAfficherReponseEcrit">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>410</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Votre réponse</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelVraiFaux">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>410</y>
+      <width>211</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Vrai ou Faux</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QLabel" name="labelAfficherReponseEcrit">
+  <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>790</x>
-     <y>130</y>
-     <width>121</width>
-     <height>51</height>
+     <x>480</x>
+     <y>0</y>
+     <width>561</width>
+     <height>121</height>
     </rect>
    </property>
-   <property name="text">
-    <string>Votre réponse</string>
+   <property name="title">
+    <string>Inscription</string>
    </property>
-  </widget>
-  <widget class="QLabel" name="labelVraiFaux">
-   <property name="geometry">
-    <rect>
-     <x>790</x>
-     <y>230</y>
-     <width>111</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Vrai ou Faux</string>
-   </property>
+   <layout class="QGridLayout" name="gridLayout_7">
+    <item row="0" column="0">
+     <widget class="QLabel" name="labelEmail">
+      <property name="text">
+       <string>email : </string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QLabel" name="label_10">
+      <property name="text">
+       <string>Verification du mot de passe : </string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="4">
+     <widget class="QLineEdit" name="lineEditVerifMdp"/>
+    </item>
+    <item row="1" column="2">
+     <widget class="QLineEdit" name="lineEditNomUtilisateurInscription"/>
+    </item>
+    <item row="0" column="2">
+     <widget class="QLineEdit" name="lineEditEmail"/>
+    </item>
+    <item row="0" column="4">
+     <widget class="QLineEdit" name="lineEditMdpInscription"/>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QLabel" name="labelNomUtilisateurInscription">
+      <property name="text">
+       <string>Nom d'utilisateur :</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QLabel" name="labelMdpInscription">
+      <property name="text">
+       <string>Mot de passe : </string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="3">
+     <widget class="QPushButton" name="pushButtoninscrire">
+      <property name="text">
+       <string>S'inscrire</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
