@@ -138,7 +138,20 @@
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string>Votre réponse</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelVraiFaux">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>230</y>
+     <width>111</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Vrai ou Faux</string>
    </property>
   </widget>
  </widget>
