@@ -62,5 +62,30 @@ SELECT reponse FROM "question" WHERE id_quest = :id;
     reponseNorm.remove('\t');
     reponseNorm.remove('\n');
 
-    qDebug() << reponseNorm;
-}
+    qDebug() << reponseNorm;}
+
+  ============================================================
+  
+    {
+      int nbQuestion;
+      QSqlQuery requete("SELECT COUNT(id_quest) FROM question;" );
+        if (requete.exec()){
+            while(requete.next())
+            {  
+                  nbQuestion=requete.value("COUNT(id_quest)").toInt();
+
+                qDebug() <<"Nombre de question"<< nbQuestion;
+            }
+        }}
+
+
+
+
+
+
+
+
+
+
+
+
