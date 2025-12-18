@@ -18,10 +18,11 @@ out << taille << commande << reponse
 juste E pour END comme ca c'est plus simple coté utilisateur
 
 client out :
-out << taille << reponse;
-
+out << taille << commande << reponse;
+                  'R'
 Inscription client :
 out << taille << commande << pseudo << mail << mdp << verifMdp;
-
+                  'I'
 Connexion client :
 out << taille << commande << pseudo << mdp;
+                  'C'
