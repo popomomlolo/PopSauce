@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTcpSocket>
+#include <QBuffer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class WidgetPopSauceClient; }
@@ -15,7 +16,7 @@ class WidgetPopSauceClient : public QWidget
 public:
     WidgetPopSauceClient(QWidget *parent = nullptr);
     ~WidgetPopSauceClient();
-    void envoyerDonnees(QString reponse);
+    void envoyerDonnees();
 private slots:
     void on_pushButtonConnexion_clicked();
     void onQTcpSocket_connected();
