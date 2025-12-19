@@ -23,18 +23,29 @@ WidgetPopSauceClient::~WidgetPopSauceClient()
 
 void WidgetPopSauceClient::envoyerDonnees()
 {
-    quint64 taille;
+    quint64 taille=0;
     QBuffer tampon;
     QString reponse=ui->lineEditReponse->text();
+<<<<<<< HEAD
     QChar commande = 'R';
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
+=======
+    QChar commande='R';
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+<<<<<<< HEAD
+=======
+    commande='R';
+>>>>>>> 203b2ab2787fc2ef2f0621d9b51144b6ab0487ee
+>>>>>>> 5fec34c94d43c0546b9247843d9bafed895358cf
     out<<taille<<commande<<reponse;
     taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
     tampon.seek(0);
     out<<taille;
-    qDebug() <<"envoyerDonnees"<< reponse;
+    qDebug() <<"envoyerDonnees"<< commande << reponse;
     socketJoueur.write(tampon.buffer());
 
     ui->labelAfficherReponseEcrit->setText(reponse);
@@ -65,6 +76,8 @@ void WidgetPopSauceClient::onQTcpSocket_connected()
 void WidgetPopSauceClient::onQTcpSocket_disconnected()
 {
     qDebug() << "Déconnecté";
+
+
 }
 
 void WidgetPopSauceClient::onQTcpSocket_readyRead()
@@ -159,10 +172,10 @@ void WidgetPopSauceClient::on_pushButtonEnvoyer_clicked()
 
 void WidgetPopSauceClient::on_pushButtonInscription_clicked()
 {
-    pseudo = ui->lineEditNomUtilisateurInscription->text();
-    mail = ui->lineEditEmail->text();
-    mdp = ui->lineEditMdpInscription->text();
-    verifMdp = ui->lineEditVerifMdp->text();
+    pseudo = ui->lineEditInscrUser->text();
+    mail = ui->lineEditMail->text();
+    mdp = ui->lineEditInscrMdp->text();
+    verifMdp = ui->lineEditInscrMdpVerif->text();
 
     envoyerInscription(pseudo, mail, mdp, verifMdp);
 
@@ -176,11 +189,12 @@ void WidgetPopSauceClient::envoyerInscription(QString pseudo, QString mail, QStr
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
-    out<<taille<<pseudo<<mail<<mdp<<mdp2;
+    commande='I';
+    out<<taille<<commande<<pseudo<<mail<<mdp<<mdp2;
     taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
     tampon.seek(0);
     out<<taille;
-    qDebug() <<"Donnez envoyee"<<pseudo<<mail<<mdp<<mdp2;
+    qDebug() <<"Donnez envoyee"<<commande<<pseudo<<mail<<mdp<<mdp2;
     socketJoueur.write(tampon.buffer());
 
 
@@ -189,12 +203,12 @@ void WidgetPopSauceClient::envoyerInscription(QString pseudo, QString mail, QStr
 
 void WidgetPopSauceClient::on_pushButtonConnexionCompte_clicked()
 {
-    pseudo = ui->lineEditNomUtilisateur->text();
-    mdp = ui->lineEditMdpConnexion->text();
+    pseudo = ui->lineEditUser->text();
+    mdp = ui->lineEditMdp->text();
 
     envoyerConnexionCompte(pseudo, mdp);
 
-    qDebug() << pseudo << mdp;
+    qDebug()<< "Donne envoye" << commande << pseudo << mdp;
 }
 
 void WidgetPopSauceClient::envoyerConnexionCompte(QString pseudo, QString mdp)
@@ -205,13 +219,18 @@ void WidgetPopSauceClient::envoyerConnexionCompte(QString pseudo, QString mdp)
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
+<<<<<<< HEAD
+=======
+    commande='C';
+>>>>>>> 5fec34c94d43c0546b9247843d9bafed895358cf
     out<<taille<<commande<<pseudo<<mdp;
     taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
     tampon.seek(0);
     out<<taille;
-    qDebug() <<"Donnez envoyee"<<pseudo<<mdp;
+    qDebug() <<"Donnez envoyee"<<commande<<pseudo<<mdp;
     socketJoueur.write(tampon.buffer());
 }
+<<<<<<< HEAD
 
 void WidgetPopSauceClient::envoyerInscriptionCompte(QString pseudo, QString email, QString mdp, QString verifMdp)
 {
@@ -257,3 +276,5 @@ void WidgetPopSauceClient::on_pushButtoninscrire_clicked()
     qDebug() << pseudo << mail << mdp << verifMdp;
 }
 
+=======
+>>>>>>> 5fec34c94d43c0546b9247843d9bafed895358cf

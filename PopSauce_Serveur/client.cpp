@@ -6,6 +6,11 @@ Client::Client()
 
 }
 
+Client::~Client()
+{
+
+}
+
 int Client::getScores() const
 {
     return scores;

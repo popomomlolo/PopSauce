@@ -7,6 +7,7 @@ class Client
 {
 public:
     Client();
+    ~Client();
     int getScores() const;
     void setScores(int newScores);
     QString getNom() const;
