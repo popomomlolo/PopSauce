@@ -241,8 +241,7 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
 
 void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString reponse)
 {
-    // Arrêter le timer car le client a répondu
-    timer->stop();
+
 
     quint64 taille = 0;
     QBuffer tampon;
@@ -257,6 +256,7 @@ void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString repon
         {
             commande = 'V';
             ui->textEdit->append("Bonne réponse !");
+
         }
         else
         {
