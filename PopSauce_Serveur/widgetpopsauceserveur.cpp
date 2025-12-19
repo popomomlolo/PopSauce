@@ -51,6 +51,15 @@ WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
         qDebug()<<"Ouverture de la BDD ok";
     }
 
+    srand(time(nullptr));
+
+    // AJOUT : Configuration du timer
+    timer = new QTimer(this);
+    timer->setInterval(12000);  // 12 secondes = 12000 millisecondes
+    timer->setSingleShot(true);
+
+    connect(timer, &QTimer::timeout, this, &WidgetPopSauceServeur::onTimer_timeout);
+
     connect(&sockEcoute, &QTcpServer::newConnection,
             this, &WidgetPopSauceServeur::onQTcpServer_newConnection);
 
@@ -161,6 +170,21 @@ void WidgetPopSauceServeur::onQTcpSocket_connected()
     ui->textEdit->append("connected client");
 }
 
+void WidgetPopSauceServeur::onTimer_timeout()
+{
+    qDebug() << "Timer expiré ! 12 secondes écoulées";
+    ui->textEdit->append("Temps écoulé pour la question !");
+
+    // Envoyer la fin à tous les clients connectés
+    for (int i = 0; i < listeClients.size(); i++)
+    {
+        envoyerFin(listeClients.at(i)->getSockClient());
+    }
+
+    // Arrêter le timer
+    timer->stop();
+}
+
 void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
 {
     quint64 taille = 0;
@@ -169,7 +193,8 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
     QPixmap img("/home/USERS/ELEVES/CIEL2024/alaffiac/CIEL_2/challenge_noel/images_jpeg/"+indice);
     ui->labelImage->setPixmap(img);
     int score(0);
-    int tempsMilisecondes=0;
+    int tempsMilisecondes = 12000;  // Indiquer 12 secondes au client
+
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
 
@@ -180,25 +205,33 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
     taille = static_cast<quint64>(tampon.size()) - sizeof(taille);
     tampon.seek(0);
     out << taille;
+
     qDebug() <<"envoyerQuestion"<< taille << commande << img << question << score << tempsMilisecondes;
+
     // Envoi
     client->write(tampon.buffer());
+
+    // AJOUT : Démarrer le timer
+    timer->start();
 }
 
 void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString reponse)
 {
+    // AJOUT : Arrêter le timer car le client a répondu
+    timer->stop();
+
     quint64 taille = 0;
     QBuffer tampon;
     QChar commande('F');
-    //QString bonneReponse=bddReponse();
+
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
     normaliser(reponse);
-    if (reponseNorm!=nullptr){
-        if (reponseNorm==bReponse || reponseNorm==alt1 || reponseNorm==alt2)
-        {
-            commande='V';
 
+    if (!reponseNorm.isEmpty()) {  // Correction du bug aussi
+        if (reponseNorm == bReponse || reponseNorm == alt1 || reponseNorm == alt2)
+        {
+            commande = 'V';
         }
     }
 
@@ -209,7 +242,9 @@ void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString repon
     taille = static_cast<quint64>(tampon.size()) - sizeof(taille);
     tampon.seek(0);
     out << taille;
+
     qDebug() <<"envoyerVérification"<< taille << commande;
+
     // Envoi
     client->write(tampon.buffer());
 }
