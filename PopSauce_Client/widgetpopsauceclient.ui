@@ -26,20 +26,6 @@
     <string>Connexion</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="2">
-     <widget class="QLabel" name="labelMdpConnexion">
-      <property name="text">
-       <string>Mot de passe : </string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QLabel" name="labelNomUtilisateur">
-      <property name="text">
-       <string>Nom d'utilisateur : </string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0">
      <widget class="QLabel" name="labelIP">
       <property name="text">
@@ -64,13 +50,6 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0" colspan="2">
-     <widget class="QPushButton" name="pushButtonConnexion">
-      <property name="text">
-       <string>Connexion</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
      <widget class="QLineEdit" name="lineEditIP">
       <property name="text">
@@ -78,16 +57,10 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="3">
-     <widget class="QLineEdit" name="lineEditNomUtilisateur"/>
-    </item>
-    <item row="1" column="3">
-     <widget class="QLineEdit" name="lineEditMdpConnexion"/>
-    </item>
-    <item row="2" column="2" colspan="2">
-     <widget class="QPushButton" name="pushButton">
+    <item row="2" column="0" colspan="2">
+     <widget class="QPushButton" name="pushButtonConnexion">
       <property name="text">
-       <string>Connexion a votre compte</string>
+       <string>Connexion</string>
       </property>
      </widget>
     </item>
@@ -194,67 +167,21 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
+  <widget class="QLabel" name="labelScore">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>0</y>
-     <width>561</width>
-     <height>121</height>
+     <x>490</x>
+     <y>20</y>
+     <width>541</width>
+     <height>81</height>
     </rect>
    </property>
-   <property name="title">
-    <string>Inscription</string>
+   <property name="text">
+    <string>Score</string>
    </property>
-   <layout class="QGridLayout" name="gridLayout_7">
-    <item row="0" column="0">
-     <widget class="QLabel" name="labelEmail">
-      <property name="text">
-       <string>email : </string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="3">
-     <widget class="QLabel" name="label_10">
-      <property name="text">
-       <string>Verification du mot de passe : </string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="4">
-     <widget class="QLineEdit" name="lineEditVerifMdp"/>
-    </item>
-    <item row="1" column="2">
-     <widget class="QLineEdit" name="lineEditNomUtilisateurInscription"/>
-    </item>
-    <item row="0" column="2">
-     <widget class="QLineEdit" name="lineEditEmail"/>
-    </item>
-    <item row="0" column="4">
-     <widget class="QLineEdit" name="lineEditMdpInscription"/>
-    </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QLabel" name="labelNomUtilisateurInscription">
-      <property name="text">
-       <string>Nom d'utilisateur :</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QLabel" name="labelMdpInscription">
-      <property name="text">
-       <string>Mot de passe : </string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="3">
-     <widget class="QPushButton" name="pushButtoninscrire">
-      <property name="text">
-       <string>S'inscrire</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
   </widget>
  </widget>
  <resources/>
