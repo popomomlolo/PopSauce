@@ -35,17 +35,20 @@ private slots:
     void onQTcpSocket_errorOccured();
     void onQTcpSocket_connected();
     void onTimer_timeout();
+    void onTimerProchaine_timeout();
 private:
     Ui::WidgetPopSauceServeur *ui;
     QTcpServer sockEcoute;
     QList <Client *> listeClients;
     QString bReponse,question,indice,alt1,alt2,reponseNorm;
     QTimer *timer;
+    QTimer *timerProchaine;
     void envoyerQuestion(QTcpSocket *client);
     void envoyerVerification(QTcpSocket *client, QString reponse);
     void envoyerFin(QTcpSocket *client);
     void bddQestion();
     void normaliser(QString reponse);
+    void envoyerProchaineQuestion();
     int getIndexClient(QTcpSocket *client);
 };
 #endif // WIDGETPOPSAUCESERVEUR_H

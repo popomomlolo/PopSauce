@@ -46,7 +46,8 @@ template <> constexpr inline auto WidgetPopSauceServeur::qt_create_metaobjectdat
         "onQTcpSocket_readyRead",
         "onQTcpSocket_errorOccured",
         "onQTcpSocket_connected",
-        "onTimer_timeout"
+        "onTimer_timeout",
+        "onTimerProchaine_timeout"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -64,6 +65,8 @@ template <> constexpr inline auto WidgetPopSauceServeur::qt_create_metaobjectdat
         QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onTimer_timeout'
         QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onTimerProchaine_timeout'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -94,6 +97,7 @@ void WidgetPopSauceServeur::qt_static_metacall(QObject *_o, QMetaObject::Call _c
         case 4: _t->onQTcpSocket_errorOccured(); break;
         case 5: _t->onQTcpSocket_connected(); break;
         case 6: _t->onTimer_timeout(); break;
+        case 7: _t->onTimerProchaine_timeout(); break;
         default: ;
         }
     }
@@ -119,14 +123,14 @@ int WidgetPopSauceServeur::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 8;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 7)
+        if (_id < 8)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 7;
+        _id -= 8;
     }
     return _id;
 }

@@ -60,6 +60,12 @@ WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
 
     connect(timer, &QTimer::timeout, this, &WidgetPopSauceServeur::onTimer_timeout);
 
+    timerProchaine = new QTimer(this);
+    timerProchaine->setInterval(5000);  // 5 secondes
+    timerProchaine->setSingleShot(true);
+    connect(timerProchaine, &QTimer::timeout, this, &WidgetPopSauceServeur::onTimerProchaine_timeout);
+
+
     connect(&sockEcoute, &QTcpServer::newConnection,
             this, &WidgetPopSauceServeur::onQTcpServer_newConnection);
 
@@ -183,7 +189,25 @@ void WidgetPopSauceServeur::onTimer_timeout()
 
     // Arrêter le timer
     timer->stop();
+
+    // AJOUT : Démarrer le timer de 5s avant la prochaine question
+    ui->textEdit->append("Prochaine question dans 5 secondes...");
+    timerProchaine->start();
 }
+
+
+void WidgetPopSauceServeur::onTimerProchaine_timeout()
+{
+    qDebug() << "5 secondes écoulées, envoi de la prochaine question";
+    ui->textEdit->append("Envoi de la prochaine question !");
+
+    // Arrêter le timer
+    timerProchaine->stop();
+
+    // Préparer et envoyer la prochaine question
+    envoyerProchaineQuestion();
+}
+
 
 void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
 {
@@ -217,7 +241,7 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
 
 void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString reponse)
 {
-    // AJOUT : Arrêter le timer car le client a répondu
+    // Arrêter le timer car le client a répondu
     timer->stop();
 
     quint64 taille = 0;
@@ -228,10 +252,15 @@ void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString repon
     QDataStream out(&tampon);
     normaliser(reponse);
 
-    if (!reponseNorm.isEmpty()) {  // Correction du bug aussi
+    if (!reponseNorm.isEmpty()) {
         if (reponseNorm == bReponse || reponseNorm == alt1 || reponseNorm == alt2)
         {
             commande = 'V';
+            ui->textEdit->append("Bonne réponse !");
+        }
+        else
+        {
+            ui->textEdit->append("Mauvaise réponse !");
         }
     }
 
@@ -245,8 +274,18 @@ void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString repon
 
     qDebug() <<"envoyerVérification"<< taille << commande;
 
-    // Envoi
+    // Envoi de la vérification
     client->write(tampon.buffer());
+
+    // AJOUT : Envoyer la fin à tous les clients
+    for (int i = 0; i < listeClients.size(); i++)
+    {
+        envoyerFin(listeClients.at(i)->getSockClient());
+    }
+
+    // AJOUT : Démarrer le timer de 5s avant la prochaine question
+    ui->textEdit->append("Prochaine question dans 5 secondes...");
+    timerProchaine->start();
 }
 
 void WidgetPopSauceServeur::envoyerFin(QTcpSocket *client)
@@ -324,6 +363,18 @@ void WidgetPopSauceServeur::normaliser(QString reponse)
     reponseNorm.remove('\n');
 
     qDebug() << reponseNorm;
+}
+
+void WidgetPopSauceServeur::envoyerProchaineQuestion()
+{
+    // Récupérer une nouvelle question de la base de données
+    bddQestion();
+
+    // Envoyer la nouvelle question à tous les clients connectés
+    for (int i = 0; i < listeClients.size(); i++)
+    {
+        envoyerQuestion(listeClients.at(i)->getSockClient());
+    }
 }
 
 int WidgetPopSauceServeur::getIndexClient(QTcpSocket *client)
