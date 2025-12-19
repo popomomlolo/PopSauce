@@ -7,6 +7,9 @@ WidgetPopSauceClient::WidgetPopSauceClient(QWidget *parent)
 {
     ui->setupUi(this);
 
+    monTimer = new QTimer(this);
+    connect(monTimer,&QTimer::timeout,this,&WidgetPopSauceClient::updateCompteur);
+
     connect(&socketJoueur,&QTcpSocket::connected,this,&WidgetPopSauceClient::onQTcpSocket_connected);
     connect(&socketJoueur,&QTcpSocket::disconnected,this,&WidgetPopSauceClient::onQTcpSocket_disconnected);
     connect(&socketJoueur,&QTcpSocket::readyRead,this,&WidgetPopSauceClient::onQTcpSocket_readyRead);
@@ -23,10 +26,11 @@ void WidgetPopSauceClient::envoyerDonnees()
     quint64 taille;
     QBuffer tampon;
     QString reponse=ui->lineEditReponse->text();
+    QChar commande = 'R';
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
-    out<<taille<<reponse;
+    out<<taille<<commande<<reponse;
     taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
     tampon.seek(0);
     out<<taille;
@@ -70,7 +74,7 @@ void WidgetPopSauceClient::onQTcpSocket_readyRead()
     QPixmap img ;
     QString question;
     int score;
-    int timer;
+
 
     qDebug() << this << "Ready Read : " << QString::number(socketJoueur.bytesAvailable()) << " bytes Availables";
     if (!enCoursDeLecture)
@@ -99,19 +103,25 @@ void WidgetPopSauceClient::onQTcpSocket_readyRead()
             qDebug()<<"reception image";
             switch (commande.toLatin1()) {
             case 'Q':
-                // lecture image
-                in >> img >> question >> score >> timer;
-                qDebug()<<"image reçu";
+                int dureeTimer;
+                in >> img >> question >> score >> dureeTimer;
 
-                //affichage image dans le QLabel ui->labelImg
+                // Affichage de l'image
                 ui->labelImage->setPixmap(img);
-                //ui->labelImg->resize(img.size());
                 ui->labelImage->setScaledContents(true);
-                tailleAttendue=0;
-                enCoursDeLecture=false;
 
+                // Affichage de la question
                 ui->labelQuestion->setText(question);
                 ui->labelQuestion->setAlignment(Qt::AlignCenter);
+
+                // Démarrer le compte à rebours
+                tempsRestant = dureeTimer / 1000; // Convertir millisecondes en secondes
+                ui->labelTemps->setText(QString::number(tempsRestant) + " s");
+
+                monTimer->start(1000); // Déclencher toutes les secondes
+
+                tailleAttendue = 0;
+                enCoursDeLecture = false;
                 break;
             case 'V':
                 ui->labelVraiFaux->setText("Bonne réponse");
@@ -191,10 +201,11 @@ void WidgetPopSauceClient::envoyerConnexionCompte(QString pseudo, QString mdp)
 {
     quint64 taille;
     QBuffer tampon;
+    QChar commande='C';
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
-    out<<taille<<pseudo<<mdp;
+    out<<taille<<commande<<pseudo<<mdp;
     taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
     tampon.seek(0);
     out<<taille;
@@ -202,23 +213,47 @@ void WidgetPopSauceClient::envoyerConnexionCompte(QString pseudo, QString mdp)
     socketJoueur.write(tampon.buffer());
 }
 
-void WidgetPopSauceClient::envoyerInscriptionCompte(QString pseudo, QString mdp)
+void WidgetPopSauceClient::envoyerInscriptionCompte(QString pseudo, QString email, QString mdp, QString verifMdp)
 {
     quint64 taille;
     QBuffer tampon;
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
-    out<<taille<<pseudo<<mdp;
+    QChar commande='I';
+    out<<taille<<commande<<pseudo<<email<<mdp<<verifMdp;
     taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
     tampon.seek(0);
     out<<taille;
-    qDebug() <<"Donnez envoyee"<<pseudo<<mdp;
+    qDebug() <<"Donnez envoyee"<<commande<<pseudo<<email<<mdp<<verifMdp;
     socketJoueur.write(tampon.buffer());
+}
+
+void WidgetPopSauceClient::updateCompteur()
+{
+    tempsRestant--;
+
+    if (tempsRestant <= 0)
+    {
+        monTimer->stop();
+        ui->labelTemps->setText("0 s");
+        qDebug() << "Temps écoulé !";
+    }
+    else
+    {
+        ui->labelTemps->setText(QString::number(tempsRestant)+ "s");
+    }
 }
 
 void WidgetPopSauceClient::on_pushButtoninscrire_clicked()
 {
+    pseudo = ui->lineEditNomUtilisateurInscription->text();
+    mail = ui->lineEditEmail->text();
+    mdp = ui->lineEditMdpInscription->text();
+    verifMdp = ui->lineEditVerifMdp->text();
 
+    envoyerInscription(pseudo, mail, mdp, verifMdp);
+
+    qDebug() << pseudo << mail << mdp << verifMdp;
 }
 

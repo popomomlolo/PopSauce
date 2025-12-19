@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTcpSocket>
 #include <QBuffer>
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class WidgetPopSauceClient; }
@@ -19,7 +20,8 @@ public:
     void envoyerDonnees();
     void envoyerInscription(QString pseudo, QString mail, QString mdp, QString mdp2);
     void envoyerConnexionCompte(QString pseudo, QString mdp);
-    void envoyerInscriptionCompte(QString pseudo, QString mdp);
+    void envoyerInscriptionCompte(QString pseudo, QString email, QString mdp, QString verifMdp);
+    void updateCompteur();
 private slots:
     void on_pushButtonConnexion_clicked();
     void onQTcpSocket_connected();
@@ -35,7 +37,8 @@ private:
     QTcpSocket socketJoueur;
     bool enCoursDeLecture=false;
     quint64 tailleAttendue=0;
-
     QString pseudo, mail, mdp, verifMdp;
+    QTimer *monTimer;
+    int tempsRestant;
 };
 #endif // WIDGETPOPSAUCECLIENT_H
