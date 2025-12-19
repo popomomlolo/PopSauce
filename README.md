@@ -111,3 +111,25 @@ in>>commande;
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
     out<<taille<<commande<<reponse;
+
+
+
+====================================================================================
+
+            void WidgetPopSauceServeur::inscrireClient(QString pseudo, QString bemail, QString bmdp, QString verifMdp)
+            {
+            if(mdp == verifMdp){
+
+            QSqlQuery requetePrepare;
+    
+    
+            requetePrepare.prepare("INSERT INTO utilisateurs (`nom_utilisateur`, `mot_de_passe`, `email`, `score`) VALUES (:bpseudo, :bmdp, :bemail, '0');");
+            requetePrepare.bindValue(":bpseudo",pseudo);
+            requetePrepare.bindValue(":bmdp",bmdp);
+            requetePrepare.bindValue(":bemail",bemail);
+    
+            if (!requetePrepare.exec()){
+                qDebug()<<"pb requete "<<requetePrepare.lastError();
+            }
+    }
+    }
