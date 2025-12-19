@@ -3,7 +3,7 @@ Format des trames
 serveur out :
 Envoie des question : 
 out << taille << commande << img << question << score << timer;
-      quint16    QChar     QPixmap   QString    int      double
+      quint16    QChar     QPixmap   QString    int      QTimer
                 'Q'        C:\        "qui ?"   1        1.1
 
 Verifie si la reponse est vrai ou faux
@@ -19,10 +19,13 @@ juste E pour END comme ca c'est plus simple coté utilisateur
 
 client out :
 out << taille << commande << reponse;
+      quint16    QChar
                   'R'
 Inscription client :
 out << taille << commande << pseudo << mail << mdp << verifMdp;
+      quint16    QChar
                   'I'
 Connexion client :
 out << taille << commande << pseudo << mdp;
+      quint16    QChar
                   'C'
