@@ -312,7 +312,7 @@ void WidgetPopSauceServeur::envoyerFin(QTcpSocket *client)
 void WidgetPopSauceServeur::bddQestion()
 {
     int nbQuestion;
-    QSqlQuery requete("SELECT COUNT(id_quest) FROM question;" );
+  /*  QSqlQuery requete("SELECT COUNT(id_quest) FROM question;" );
     if (requete.exec()){
         while(requete.next())
         {
@@ -321,11 +321,11 @@ void WidgetPopSauceServeur::bddQestion()
             qDebug() <<"Nombre de question"<< nbQuestion;
         }
     }
-    int nbRandom = rand() % nbQuestion + 1; //Nombre random entre 1 et 2 (seuleument changer le premier nb pas le deuxieme)
-    QSqlQuery requetePrepare;
+    int nbRandom = rand() % nbQuestion + 1; //Nombre random entre 1 et 2 (seuleument changer le premier nb pas le deuxieme)*/
+    QSqlQuery requetePrepare("SELECT texte_question, indice, reponse,option_a ,option_b FROM question order by rand() limit 1;");;
 
-    requetePrepare.prepare("SELECT texte_question, indice, reponse,option_a ,option_b FROM question WHERE id_quest = :id;");
-    requetePrepare.bindValue(":id",nbRandom);
+   // requetePrepare.prepare("SELECT texte_question, indice, reponse,option_a ,option_b FROM question WHERE id_quest = :id;");
+    //requetePrepare.bindValue(":id",nbRandom);
 
     if (!requetePrepare.exec()){
         qDebug()<<"pb requete "<<requetePrepare.lastError();

@@ -122,12 +122,11 @@ void WidgetPopSauceClient::onQTcpSocket_readyRead()
 
                 monTimer->start(1000); // Déclencher toutes les secondes
 
-                ui->lineEditReponse->clear();
-                ui->labelVraiFaux->clear();
                 break;
             case 'V':
                 ui->labelVraiFaux->setText("Bonne réponse");
                 qDebug()<<"case V";
+                ui->labelScore->setText(QString::number(score));
                 break;
             case 'F':
                 ui->labelVraiFaux->setText("Mauvaise réponse");
@@ -139,7 +138,6 @@ void WidgetPopSauceClient::onQTcpSocket_readyRead()
                 in >> reponse;
                 //ui->labelVraiFaux->setText(reponse);
                 qDebug()<<"case E";
-                ui->labelAfficherReponseEcrit->setText(reponse);
                 break;
             }
             default:
@@ -160,78 +158,6 @@ void WidgetPopSauceClient::on_pushButtonEnvoyer_clicked()
     envoyerDonnees();
 }
 
-void WidgetPopSauceClient::on_pushButtonInscription_clicked()
-{
-    pseudo = ui->lineEditNomUtilisateurInscription->text();
-    mail = ui->lineEditEmail->text();
-    mdp = ui->lineEditMdpInscription->text();
-    verifMdp = ui->lineEditVerifMdp->text();
-
-    envoyerInscription(pseudo, mail, mdp, verifMdp);
-
-    qDebug() << pseudo << mail << mdp << verifMdp;
-}
-
-void WidgetPopSauceClient::envoyerInscription(QString pseudo, QString mail, QString mdp, QString mdp2)
-{
-    quint64 taille;
-    QBuffer tampon;
-
-    tampon.open(QIODevice::WriteOnly);
-    QDataStream out(&tampon);
-    out<<taille<<pseudo<<mail<<mdp<<mdp2;
-    taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
-    tampon.seek(0);
-    out<<taille;
-    qDebug() <<"Donnez envoyee"<<pseudo<<mail<<mdp<<mdp2;
-    socketJoueur.write(tampon.buffer());
-
-
-}
-
-
-void WidgetPopSauceClient::on_pushButtonConnexionCompte_clicked()
-{
-    pseudo = ui->lineEditNomUtilisateur->text();
-    mdp = ui->lineEditMdpConnexion->text();
-
-    envoyerConnexionCompte(pseudo, mdp);
-
-    qDebug() << pseudo << mdp;
-}
-
-void WidgetPopSauceClient::envoyerConnexionCompte(QString pseudo, QString mdp)
-{
-    quint64 taille;
-    QBuffer tampon;
-    QChar commande='C';
-
-    tampon.open(QIODevice::WriteOnly);
-    QDataStream out(&tampon);
-    out<<taille<<commande<<pseudo<<mdp;
-    taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
-    tampon.seek(0);
-    out<<taille;
-    qDebug() <<"Donnez envoyee"<<pseudo<<mdp;
-    socketJoueur.write(tampon.buffer());
-}
-
-void WidgetPopSauceClient::envoyerInscriptionCompte(QString pseudo, QString email, QString mdp, QString verifMdp)
-{
-    quint64 taille;
-    QBuffer tampon;
-
-    tampon.open(QIODevice::WriteOnly);
-    QDataStream out(&tampon);
-    QChar commande='I';
-    out<<taille<<commande<<pseudo<<email<<mdp<<verifMdp;
-    taille=(static_cast<quint64>(tampon.size()))-sizeof(taille);
-    tampon.seek(0);
-    out<<taille;
-    qDebug() <<"Donnez envoyee"<<commande<<pseudo<<email<<mdp<<verifMdp;
-    socketJoueur.write(tampon.buffer());
-}
-
 void WidgetPopSauceClient::updateCompteur()
 {
     tempsRestant--;
@@ -246,16 +172,4 @@ void WidgetPopSauceClient::updateCompteur()
     {
         ui->labelTemps->setText(QString::number(tempsRestant)+ "s");
     }
-}
-
-void WidgetPopSauceClient::on_pushButtoninscrire_clicked()
-{
-    pseudo = ui->lineEditNomUtilisateurInscription->text();
-    mail = ui->lineEditEmail->text();
-    mdp = ui->lineEditMdpInscription->text();
-    verifMdp = ui->lineEditVerifMdp->text();
-
-    envoyerInscription(pseudo, mail, mdp, verifMdp);
-
-    qDebug() << pseudo << mail << mdp << verifMdp;
 }

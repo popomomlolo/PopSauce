@@ -18,9 +18,6 @@ public:
     WidgetPopSauceClient(QWidget *parent = nullptr);
     ~WidgetPopSauceClient();
     void envoyerDonnees();
-    void envoyerInscription(QString pseudo, QString mail, QString mdp, QString mdp2);
-    void envoyerConnexionCompte(QString pseudo, QString mdp);
-    void envoyerInscriptionCompte(QString pseudo, QString email, QString mdp, QString verifMdp);
     void updateCompteur();
 private slots:
     void on_pushButtonConnexion_clicked();
@@ -37,7 +34,6 @@ private:
     QTcpSocket socketJoueur;
     bool enCoursDeLecture=false;
     quint64 tailleAttendue=0;
-    QString pseudo, mail, mdp, verifMdp;
     QTimer *monTimer;
     int tempsRestant;
 };
