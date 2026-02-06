@@ -110,6 +110,11 @@ void WidgetPopSauceServeur::onQTcpServer_newConnection()
     if (!question.isEmpty())
     {
         envoyerQuestion(client);
+        // Démarrer le timer seulement s'il n'est pas déjà actif
+        if (!timer->isActive())
+        {
+            timer->start();
+        }
     }
 }
 
@@ -185,7 +190,7 @@ void WidgetPopSauceServeur::onQTcpSocket_connected()
 
 void WidgetPopSauceServeur::onTimer_timeout()
 {
-    qDebug() << "Timer expiré ! 12 secondes écoulées";
+    qDebug() << "Timer expiré ! 15 secondes écoulées";
     ui->textEdit->append("Temps écoulé pour la question !");
 
     // Envoyer la fin à tous les clients connectés
@@ -241,9 +246,6 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
 
     // Envoi
     client->write(tampon.buffer());
-
-    // AJOUT : Démarrer le timer
-    timer->start();
 }
 
 void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString reponse)
@@ -392,6 +394,9 @@ void WidgetPopSauceServeur::envoyerProchaineQuestion()
     {
         envoyerQuestion(listeClients.at(i)->getSockClient());
     }
+    
+    // Démarrer le timer après avoir envoyé la question à tous les clients
+    timer->start();
 }
 
 int WidgetPopSauceServeur::getIndexClient(QTcpSocket *client)
