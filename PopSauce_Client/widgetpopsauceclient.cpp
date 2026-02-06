@@ -69,79 +69,98 @@ void WidgetPopSauceClient::onQTcpSocket_disconnected()
 
 void WidgetPopSauceClient::onQTcpSocket_readyRead()
 {
-    quint64 taille; // La taille minimale pour prendre en compte les datas
-    QChar commande;
-    QPixmap img ;
-    QString question;
-    int score;
-
-
     qDebug() << this << "Ready Read : " << QString::number(socketJoueur.bytesAvailable()) << " bytes Availables";
-    if (!enCoursDeLecture)
+
+    // Boucle pour traiter toutes les trames disponibles dans le buffer
+    while (socketJoueur.bytesAvailable() > 0)
     {
-        if (socketJoueur.bytesAvailable() >= (qint64)sizeof(taille))
+        // Étape 1 : Lire la taille si on n'est pas déjà en cours de lecture
+        if (!enCoursDeLecture)
         {
-            QDataStream in(&socketJoueur);
-            in >> taille;
-            tailleAttendue=taille;
-            enCoursDeLecture=true;
-            qDebug()<<"Taille attendue : "<<tailleAttendue;
-        }
-    }
-    if (enCoursDeLecture)
-    {
-        qDebug()<<"des donnees sont disponibles ";
-
-        taille=socketJoueur.bytesAvailable();
-        qDebug()<<"octets disponibles : "<<taille;
-        if (taille >= (quint64)tailleAttendue)
-        {
-            QDataStream in(&socketJoueur);
-
-            in>>commande;
-            qDebug()<<"commande"<<commande;
-            qDebug()<<"reception image";
-            tailleAttendue = 0;
-            enCoursDeLecture = false;
-            switch (commande.toLatin1()) {
-            case 'Q':
-                int dureeTimer;
-                in >> img >> question >> score >> dureeTimer;
-
-                // Affichage de l'image
-                ui->labelImage->setPixmap(img);
-                ui->labelImage->setScaledContents(true);
-
-                // Affichage de la question
-                ui->labelQuestion->setText(question);
-                ui->labelQuestion->setAlignment(Qt::AlignCenter);
-
-                // Démarrer le compte à rebours
-                tempsRestant = dureeTimer / 1000; // Convertir millisecondes en secondes
-                ui->labelTemps->setText(QString::number(tempsRestant) + " s");
-
-                monTimer->start(1000); // Déclencher toutes les secondes
-
-                break;
-            case 'V':
-                ui->labelVraiFaux->setText("Bonne réponse");
-                qDebug()<<"case V";
-                // ui->labelScore->setText(QString::number(score));
-                break;
-            case 'F':
-                ui->labelVraiFaux->setText("Mauvaise réponse");
-                qDebug()<<"case F";
-                break;
-            case 'E':
+            if (socketJoueur.bytesAvailable() >= (qint64)sizeof(quint64))
             {
-                QString reponse;
-                in >> reponse;
-                //ui->labelVraiFaux->setText(reponse);
-                qDebug()<<"case E";
-                break;
+                QDataStream in(&socketJoueur);
+                in >> tailleAttendue;
+                enCoursDeLecture = true;
+                qDebug() << "Taille attendue : " << tailleAttendue;
             }
-            default:
-                break;
+            else
+            {
+                // Pas assez d'octets pour lire la taille, on attend
+                return;
+            }
+        }
+
+        // Étape 2 : Vérifier qu'on a assez d'octets pour la trame complète
+        if (enCoursDeLecture)
+        {
+            qDebug() << "des donnees sont disponibles ";
+            quint64 octetsDisponibles = socketJoueur.bytesAvailable();
+            qDebug() << "octets disponibles : " << octetsDisponibles;
+
+            if (octetsDisponibles >= tailleAttendue)
+            {
+                QDataStream in(&socketJoueur);
+                QChar commande;
+                in >> commande;
+                qDebug() << "commande" << commande;
+
+                tailleAttendue = 0;
+                enCoursDeLecture = false;
+
+                switch (commande.toLatin1()) {
+                case 'Q':
+                {
+                    QPixmap img;
+                    QString question;
+                    int score;
+                    int dureeTimer;
+                    in >> img >> question >> score >> dureeTimer;
+
+                    // Affichage de l'image
+                    ui->labelImage->setPixmap(img);
+                    ui->labelImage->setScaledContents(true);
+
+                    // Affichage de la question
+                    ui->labelQuestion->setText(question);
+                    ui->labelQuestion->setAlignment(Qt::AlignCenter);
+
+                    // Réinitialiser le label
+                    ui->labelVraiFaux->setText("");
+
+                    // Démarrer le compte à rebours
+                    tempsRestant = dureeTimer / 1000;
+                    ui->labelTemps->setText(QString::number(tempsRestant) + " s");
+
+                    monTimer->start(1000);
+                    break;
+                }
+                case 'V':
+                    ui->labelVraiFaux->setText("Bonne réponse");
+                    monTimer->stop();
+                    qDebug() << "case V";
+                    break;
+                case 'F':
+                    ui->labelVraiFaux->setText("Mauvaise réponse");
+                    monTimer->stop();
+                    qDebug() << "case F";
+                    break;
+                case 'E':
+                {
+                    QString reponse;
+                    in >> reponse;
+                    monTimer->stop();
+                    qDebug() << "case E - bonne réponse était : " << reponse;
+                    break;
+                }
+                default:
+                    break;
+                }
+            }
+            else
+            {
+                // Pas assez d'octets pour la trame complète, on attend le prochain readyRead
+                return;
             }
         }
     }
