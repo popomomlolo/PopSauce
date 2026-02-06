@@ -55,7 +55,7 @@ WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
 
     // AJOUT : Configuration du timer
     timer = new QTimer(this);
-    timer->setInterval(12000);  // 12 secondes = 12000 millisecondes
+    timer->setInterval(15000);  // 15 secondes = 15000 millisecondes
     timer->setSingleShot(true);
 
     connect(timer, &QTimer::timeout, this, &WidgetPopSauceServeur::onTimer_timeout);
@@ -80,6 +80,9 @@ void WidgetPopSauceServeur::on_pushButtonLancer_clicked()
 {
     sockEcoute.listen(QHostAddress::Any, ui->spinBoxPort->value());
     qDebug() << "Serveur lancé";
+    
+    // Charger la première question au démarrage du serveur
+    bddQestion();
 }
 
 void WidgetPopSauceServeur::onQTcpServer_newConnection()
@@ -102,8 +105,12 @@ void WidgetPopSauceServeur::onQTcpServer_newConnection()
 
 
     qDebug() << "Nouvelle connexion de" << client->peerAddress().toString();
-    bddQestion();
-    envoyerQuestion(client);
+    
+    // Envoyer la question actuelle au nouveau client (ne pas charger une nouvelle question)
+    if (!question.isEmpty())
+    {
+        envoyerQuestion(client);
+    }
 }
 
 void WidgetPopSauceServeur::onQTcpSocket_disconnected()
@@ -217,7 +224,7 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
     QPixmap img("/home/USERS/ELEVES/CIEL2024/alaffiac/CIEL_2/challenge_noel/images_jpeg/"+indice);
     ui->labelImage->setPixmap(img);
     int score(0);
-    int tempsMilisecondes = 12000;  // Indiquer 12 secondes au client
+    int tempsMilisecondes = 15000;  // Indiquer 15 secondes au client
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
@@ -249,10 +256,15 @@ void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString repon
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
-    normaliser(reponse);
+    
+    // Normaliser la réponse de l'utilisateur et les réponses de la base de données
+    QString reponseNorm = normaliserTexte(reponse);
+    QString bReponseNorm = normaliserTexte(bReponse);
+    QString alt1Norm = normaliserTexte(alt1);
+    QString alt2Norm = normaliserTexte(alt2);
 
     if (!reponseNorm.isEmpty()) {
-        if (reponseNorm == bReponse || reponseNorm == alt1 || reponseNorm == alt2)
+        if (reponseNorm == bReponseNorm || reponseNorm == alt1Norm || reponseNorm == alt2Norm)
         {
             commande = 'V';
             ui->textEdit->append("Bonne réponse !");
@@ -276,6 +288,9 @@ void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString repon
 
     // Envoi de la vérification
     client->write(tampon.buffer());
+
+    // AJOUT : Arrêter le timer principal pour éviter les conflits
+    timer->stop();
 
     // AJOUT : Envoyer la fin à tous les clients
     for (int i = 0; i < listeClients.size(); i++)
@@ -343,9 +358,9 @@ void WidgetPopSauceServeur::bddQestion()
 
 }
 
-void WidgetPopSauceServeur::normaliser(QString reponse)
+QString WidgetPopSauceServeur::normaliserTexte(const QString &reponse)
 {
-    reponseNorm = reponse;
+    QString reponseNorm = reponse;
 
     // 1. minuscules
     reponseNorm = reponseNorm.toLower();
@@ -363,6 +378,8 @@ void WidgetPopSauceServeur::normaliser(QString reponse)
     reponseNorm.remove('\n');
 
     qDebug() << reponseNorm;
+    
+    return reponseNorm;
 }
 
 void WidgetPopSauceServeur::envoyerProchaineQuestion()
