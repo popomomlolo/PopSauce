@@ -1,7 +1,7 @@
 #include "client.h"
 
 
-Client::Client()
+Client::Client() : scores(0), sockClient(nullptr)
 {
 
 }

@@ -152,6 +152,22 @@ void WidgetPopSauceClient::onQTcpSocket_readyRead()
                     qDebug() << "case E - bonne réponse était : " << reponse;
                     break;
                 }
+                case 'S':
+                {
+                    int nbJoueurs;
+                    in >> nbJoueurs;
+                    QString classementTexte = "🏆 Classement\n";
+                    for (int i = 0; i < nbJoueurs; i++)
+                    {
+                        QString nom;
+                        int score;
+                        in >> nom >> score;
+                        classementTexte += QString::number(i + 1) + ". " + nom + " : " + QString::number(score) + " pts\n";
+                    }
+                    ui->labelClassement->setText(classementTexte);
+                    qDebug() << "case S - classement reçu";
+                    break;
+                }
                 default:
                     break;
                 }

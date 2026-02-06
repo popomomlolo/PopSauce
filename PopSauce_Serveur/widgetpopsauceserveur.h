@@ -50,5 +50,6 @@ private:
     QString normaliserTexte(const QString &reponse);
     void envoyerProchaineQuestion();
     int getIndexClient(QTcpSocket *client);
+    void envoyerScores();
 };
 #endif // WIDGETPOPSAUCESERVEUR_H
