@@ -173,3 +173,18 @@ void WidgetPopSauceClient::updateCompteur()
         ui->labelTemps->setText(QString::number(tempsRestant)+ "s");
     }
 }
+
+void WidgetPopSauceClient::on_pushButtonInscription_clicked()
+{
+    // Stub implementation for inscription button
+}
+
+void WidgetPopSauceClient::on_pushButtonConnexionCompte_clicked()
+{
+    // Stub implementation for connexion compte button
+}
+
+void WidgetPopSauceClient::on_pushButtoninscrire_clicked()
+{
+    // Stub implementation for inscrire button
+}

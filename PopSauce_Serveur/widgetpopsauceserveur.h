@@ -40,14 +40,14 @@ private:
     Ui::WidgetPopSauceServeur *ui;
     QTcpServer sockEcoute;
     QList <Client *> listeClients;
-    QString bReponse,question,indice,alt1,alt2,reponseNorm;
+    QString bReponse,question,indice,alt1,alt2;
     QTimer *timer;
     QTimer *timerProchaine;
     void envoyerQuestion(QTcpSocket *client);
     void envoyerVerification(QTcpSocket *client, QString reponse);
     void envoyerFin(QTcpSocket *client);
     void bddQestion();
-    void normaliser(QString reponse);
+    QString normaliserTexte(const QString &reponse);
     void envoyerProchaineQuestion();
     int getIndexClient(QTcpSocket *client);
 };
