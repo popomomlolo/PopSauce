@@ -80,7 +80,7 @@ void WidgetPopSauceServeur::on_pushButtonLancer_clicked()
 {
     sockEcoute.listen(QHostAddress::Any, ui->spinBoxPort->value());
     qDebug() << "Serveur lancé";
-    
+
     // Charger la première question au démarrage du serveur
     bddQestion();
 }
@@ -105,7 +105,7 @@ void WidgetPopSauceServeur::onQTcpServer_newConnection()
 
 
     qDebug() << "Nouvelle connexion de" << client->peerAddress().toString();
-    
+
     // Envoyer la question actuelle au nouveau client (ne pas charger une nouvelle question)
     if (!question.isEmpty())
     {
@@ -149,7 +149,7 @@ void WidgetPopSauceServeur::onQTcpSocket_readyRead()
         // Vérification que le reste de la trame est complètement arrivé
         if (client->bytesAvailable() >= (qint64)taille)
         {
-            
+
             qDebug()<<"trame complete";
 
             in>>commande;
@@ -258,7 +258,7 @@ void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString repon
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
-    
+
     // Normaliser la réponse de l'utilisateur et les réponses de la base de données
     QString reponseNorm = normaliserTexte(reponse);
     QString bReponseNorm = normaliserTexte(bReponse);
@@ -380,7 +380,7 @@ QString WidgetPopSauceServeur::normaliserTexte(const QString &reponse)
     reponseNorm.remove('\n');
 
     qDebug() << reponseNorm;
-    
+
     return reponseNorm;
 }
 
@@ -394,7 +394,7 @@ void WidgetPopSauceServeur::envoyerProchaineQuestion()
     {
         envoyerQuestion(listeClients.at(i)->getSockClient());
     }
-    
+
     // Démarrer le timer après avoir envoyé la question à tous les clients
     timer->start();
 }
@@ -422,5 +422,3 @@ int WidgetPopSauceServeur::getIndexClient(QTcpSocket *client)
     return index;
 
 }
-
-
