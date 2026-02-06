@@ -13,10 +13,29 @@
   <property name="windowTitle">
    <string>WidgetPopSauceClient</string>
   </property>
-  <widget class="QGroupBox" name="groupBoxConnexion">
+  <widget class="QLabel" name="labelClassement">
    <property name="geometry">
     <rect>
      <x>0</x>
+     <y>0</y>
+     <width>230</width>
+     <height>120</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>🏆 Classement</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBoxConnexion">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
      <y>0</y>
      <width>471</width>
      <height>121</height>

@@ -1,5 +1,6 @@
 #include "widgetpopsauceserveur.h"
 #include "ui_widgetpopsauceserveur.h"
+#include <algorithm>
 
 WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
     : QWidget(parent)
@@ -55,7 +56,7 @@ WidgetPopSauceServeur::WidgetPopSauceServeur(QWidget *parent)
 
     // AJOUT : Configuration du timer
     timer = new QTimer(this);
-    timer->setInterval(15000);  // 15 secondes = 15000 millisecondes
+    timer->setInterval(20000);  // 20 secondes = 20000 millisecondes
     timer->setSingleShot(true);
 
     connect(timer, &QTimer::timeout, this, &WidgetPopSauceServeur::onTimer_timeout);
@@ -99,6 +100,8 @@ void WidgetPopSauceServeur::onQTcpServer_newConnection()
     Client *nouveauClient=new Client();
 
     nouveauClient->setSockClient(client);
+    nouveauClient->setScores(0);
+    nouveauClient->setNom("Joueur " + QString::number(listeClients.size() + 1));
 
 
     listeClients.append(nouveauClient);
@@ -115,6 +118,8 @@ void WidgetPopSauceServeur::onQTcpServer_newConnection()
         {
             timer->start();
         }
+        // Envoyer les scores actuels au nouveau client
+        envoyerScores();
     }
 }
 
@@ -190,8 +195,11 @@ void WidgetPopSauceServeur::onQTcpSocket_connected()
 
 void WidgetPopSauceServeur::onTimer_timeout()
 {
-    qDebug() << "Timer expiré ! 15 secondes écoulées";
+    qDebug() << "Timer expiré ! 20 secondes écoulées";
     ui->textEdit->append("Temps écoulé pour la question !");
+
+    // Envoyer les scores à tous les clients
+    envoyerScores();
 
     // Envoyer la fin à tous les clients connectés
     for (int i = 0; i < listeClients.size(); i++)
@@ -229,7 +237,7 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
     QPixmap img("/home/USERS/ELEVES/CIEL2024/alaffiac/CIEL_2/challenge_noel/images_jpeg/"+indice);
     ui->labelImage->setPixmap(img);
     int score(0);
-    int tempsMilisecondes = 15000;  // Indiquer 15 secondes au client
+    int tempsMilisecondes = 20000;  // Indiquer 20 secondes au client
 
     tampon.open(QIODevice::WriteOnly);
     QDataStream out(&tampon);
@@ -250,14 +258,9 @@ void WidgetPopSauceServeur::envoyerQuestion(QTcpSocket *client)
 
 void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString reponse)
 {
-
-
     quint64 taille = 0;
     QBuffer tampon;
     QChar commande('F');
-
-    tampon.open(QIODevice::WriteOnly);
-    QDataStream out(&tampon);
 
     // Normaliser la réponse de l'utilisateur et les réponses de la base de données
     QString reponseNorm = normaliserTexte(reponse);
@@ -265,12 +268,22 @@ void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString repon
     QString alt1Norm = normaliserTexte(alt1);
     QString alt2Norm = normaliserTexte(alt2);
 
+    bool bonneReponse = false;
+
     if (!reponseNorm.isEmpty()) {
         if (reponseNorm == bReponseNorm || reponseNorm == alt1Norm || reponseNorm == alt2Norm)
         {
             commande = 'V';
+            bonneReponse = true;
             ui->textEdit->append("Bonne réponse !");
 
+            // Ajouter 1 au score du client
+            int index = getIndexClient(client);
+            if (index != -1)
+            {
+                int scoreActuel = listeClients.at(index)->getScores();
+                listeClients.at(index)->setScores(scoreActuel + 1);
+            }
         }
         else
         {
@@ -278,31 +291,33 @@ void WidgetPopSauceServeur::envoyerVerification(QTcpSocket *client,QString repon
         }
     }
 
-    // Construction de la trame
+    // Construire et envoyer la trame V ou F au client
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
     out << taille << commande;
-
-    // Calcul et mise à jour de la taille
     taille = static_cast<quint64>(tampon.size()) - sizeof(taille);
     tampon.seek(0);
     out << taille;
-
-    qDebug() <<"envoyerVérification"<< taille << commande;
-
-    // Envoi de la vérification
     client->write(tampon.buffer());
 
-    // AJOUT : Arrêter le timer principal pour éviter les conflits
-    timer->stop();
-
-    // AJOUT : Envoyer la fin à tous les clients
-    for (int i = 0; i < listeClients.size(); i++)
+    // Si bonne réponse : arrêter le timer, envoyer fin à tous, envoyer les scores à tous, passer directement à la prochaine question
+    if (bonneReponse)
     {
-        envoyerFin(listeClients.at(i)->getSockClient());
-    }
+        timer->stop();
 
-    // AJOUT : Démarrer le timer de 5s avant la prochaine question
-    ui->textEdit->append("Prochaine question dans 5 secondes...");
-    timerProchaine->start();
+        // Envoyer le classement (scores) à tous les clients
+        envoyerScores();
+
+        // Envoyer fin à tous les clients
+        for (int i = 0; i < listeClients.size(); i++)
+        {
+            envoyerFin(listeClients.at(i)->getSockClient());
+        }
+
+        // Passer directement à la prochaine question (pas de délai 5s)
+        envoyerProchaineQuestion();
+    }
+    // Si mauvaise réponse : on ne fait rien d'autre, le timer de 20s continue
 }
 
 void WidgetPopSauceServeur::envoyerFin(QTcpSocket *client)
@@ -421,4 +436,39 @@ int WidgetPopSauceServeur::getIndexClient(QTcpSocket *client)
     // Retourne l'index du client ou -1 si non trouvé
     return index;
 
+}
+
+void WidgetPopSauceServeur::envoyerScores()
+{
+    // Construire la trame de scores
+    quint64 taille = 0;
+    QBuffer tampon;
+    QChar commande('S');
+    int nbJoueurs = listeClients.size();
+
+    tampon.open(QIODevice::WriteOnly);
+    QDataStream out(&tampon);
+
+    out << taille << commande << nbJoueurs;
+
+    // Trier les clients par score décroissant pour le classement
+    QList<Client*> classement = listeClients;
+    std::sort(classement.begin(), classement.end(), [](Client *a, Client *b) {
+        return a->getScores() > b->getScores();
+    });
+
+    for (int i = 0; i < classement.size(); i++)
+    {
+        out << classement.at(i)->getNom() << classement.at(i)->getScores();
+    }
+
+    taille = static_cast<quint64>(tampon.size()) - sizeof(taille);
+    tampon.seek(0);
+    out << taille;
+
+    // Envoyer à tous les clients
+    for (int i = 0; i < listeClients.size(); i++)
+    {
+        listeClients.at(i)->getSockClient()->write(tampon.buffer());
+    }
 }
